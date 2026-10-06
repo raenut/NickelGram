@@ -29,7 +29,7 @@ NickelGram 通过 [NickelMenu](https://github.com/pgaskin/NickelMenu) 为 Kobo �
 1. 从 [Latest Release](https://github.com/raenut/NickelGram/releases/latest) 下载文件名以 `-kobo-arm.zip` 结尾的压缩包并解压。
 2. 将解压得到的 `.adds` 文件夹合并到 Kobo 存储根目录，保留设备上已有的其他文件。
 3. 将 `.adds/nickelgram/config.example.json` 复制为同目录下的 `config.json`。
-4. 在 `config.json` 中填入 `telegram_bot_token` 和 `telegram_chat_id`。
+4. 参照下方配置表修改 `config.json`。
 5. 安全弹出并重启 Kobo。
 
 ## 配置
@@ -65,6 +65,6 @@ NickelGram 通过 [NickelMenu](https://github.com/pgaskin/NickelMenu) 为 Kobo �
 
 项目按 [MIT 许可证](LICENSE) 提供。
 
-开发与本地测试说明见[本地测试文档](docs/TESTING.md)。
+开发与本地测试说明见[测试说明](docs/TESTING.md)。
 
-第三方组件信息见[第三方组件文档](docs/THIRD_PARTY_LICENSES.md)。
+第三方组件信息见[第三方许可证](docs/THIRD_PARTY_LICENSES.md)。

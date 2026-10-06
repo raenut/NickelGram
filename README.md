@@ -29,7 +29,7 @@ The current release package targets 32-bit ARM Linux Kobo readers.
 1. Download the archive ending in `-kobo-arm.zip` from the [Latest Release](https://github.com/raenut/NickelGram/releases/latest) and extract it.
 2. Merge the extracted `.adds` folder into the root of Kobo storage, keeping your other existing files.
 3. Copy `.adds/nickelgram/config.example.json` to `config.json` in the same folder.
-4. Enter `telegram_bot_token` and `telegram_chat_id` in `config.json`.
+4. Edit `config.json` using the configuration table below.
 5. Safely eject and restart your Kobo.
 
 ## Configuration
@@ -65,6 +65,6 @@ Exported files are saved in `Highlights/` at the root of Kobo storage.
 
 Released under the [MIT License](LICENSE).
 
-See [Local Testing](docs/TESTING.md) for development and testing.
+See [Testing](docs/TESTING.md) for development and testing.
 
-See [Third-party Components](docs/THIRD_PARTY_LICENSES.md) for bundled component details.
+See [Third-Party Licenses](docs/THIRD_PARTY_LICENSES.md) for bundled component details.
