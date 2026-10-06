@@ -4,11 +4,17 @@
 
 # NickelGram
 
-[简体中文](README.md) · [latest release](https://github.com/raenut/NickelGram/releases/latest)
+[简体中文](README.md) · [Latest Release](https://github.com/raenut/NickelGram/releases/latest)
 
-[![Latest release](https://img.shields.io/github/v/release/raenut/NickelGram?label=release&color=788c96)](https://github.com/raenut/NickelGram/releases/latest) [![License](https://img.shields.io/github/license/raenut/NickelGram?color=788c96)](LICENSE)
+[![Latest Release](https://img.shields.io/github/v/release/raenut/NickelGram?label=release&color=788c96)](https://github.com/raenut/NickelGram/releases/latest) [![License](https://img.shields.io/github/license/raenut/NickelGram?color=788c96)](LICENSE)
 
-NickelGram adds Telegram sharing to Kobo e-readers through [NickelMenu](https://github.com/pgaskin/NickelMenu). Send selected text or the latest highlight, or export a book's highlights and annotations as a Markdown file.
+NickelGram adds Telegram sharing to Kobo e-readers through [NickelMenu](https://github.com/pgaskin/NickelMenu).
+
+Send selected text or the latest highlight, or export a book's highlights and annotations as a Markdown file.
+
+## Supported devices
+
+The current release package targets 32-bit ARM Linux Kobo readers.
 
 ## Quick start
 
@@ -18,14 +24,15 @@ NickelGram adds Telegram sharing to Kobo e-readers through [NickelMenu](https://
 - Prepare a Telegram Bot Token and the target chat's Chat ID.
 - Back up `.kobo/KoboReader.sqlite`, any existing NickelGram configuration, and your NickelMenu configuration.
 
-The release package targets 32-bit ARM Linux Kobo readers.
 
 ### 2. Installation
 
-1. Download the Kobo ARM ZIP from the [latest release](https://github.com/raenut/NickelGram/releases/latest).
-2. Extract it and merge its `.adds` folder into the root of Kobo storage, keeping your other existing files.
-3. Copy `.adds/nickelgram/config.example.json` to `config.json` in the same folder. Fill in `telegram_bot_token` and `telegram_chat_id`.
-4. Safely eject and restart your Kobo.
+1. Download the archive ending in `-kobo-arm.zip` from the [Latest Release](https://github.com/raenut/NickelGram/releases/latest).
+2. Extract the archive.
+3. Merge its `.adds` folder into the root of Kobo storage, keeping your other existing files.
+4. Copy `.adds/nickelgram/config.example.json` to `config.json` in the same folder.
+5. Enter `telegram_bot_token` and `telegram_chat_id` in `config.json`.
+6. Safely eject and restart your Kobo.
 
 ## Features
 
@@ -58,4 +65,8 @@ Keep `config.json` private because it contains your Bot Token and Chat ID.
 - Some selections or shares made immediately after switching books may be inaccurate.
 - Compatibility across devices and firmware versions has not been fully verified. Testing so far has covered Kobo Libra Colour and Kobo Clara 2E.
 
-Released under the [MIT License](LICENSE). See [Local Testing](docs/LOCAL_TEST.md) for development and testing, and [Third-party Components](docs/THIRD_PARTY.md) for bundled component details.
+Released under the [MIT License](LICENSE).
+
+See [Local Testing](docs/LOCAL_TEST.md) for development and testing.
+
+See [Third-party Components](docs/THIRD_PARTY.md) for bundled component details.

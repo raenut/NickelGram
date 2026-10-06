@@ -4,11 +4,17 @@
 
 # NickelGram
 
-[English](README.en.md) · [latest release](https://github.com/raenut/NickelGram/releases/latest)
+[English](README.en.md) · [Latest Release](https://github.com/raenut/NickelGram/releases/latest)
 
 [![最新版本](https://img.shields.io/github/v/release/raenut/NickelGram?label=release&color=788c96)](https://github.com/raenut/NickelGram/releases/latest) [![许可证](https://img.shields.io/github/license/raenut/NickelGram?color=788c96)](LICENSE)
 
-NickelGram 通过 [NickelMenu](https://github.com/pgaskin/NickelMenu) 为 Kobo 阅读器添加 Telegram 分享功能：发送选中文字或最近一条书摘，也可以把整本书的高亮和批注导出为 Markdown 文件。
+NickelGram 通过 [NickelMenu](https://github.com/pgaskin/NickelMenu) 为 Kobo 阅读器添加 Telegram 分享功能。
+
+可以发送选中文字或最近一条书摘，也可以把整本书的高亮和批注导出为 Markdown 文件。
+
+## 适用设备
+
+当前发布包适用于 32 位 ARM Linux Kobo 阅读器。
 
 ## 快速使用
 
@@ -18,14 +24,15 @@ NickelGram 通过 [NickelMenu](https://github.com/pgaskin/NickelMenu) 为 Kobo �
 - 准备 Telegram Bot Token 和目标聊天的 Chat ID。
 - 备份 `.kobo/KoboReader.sqlite`、已有的 NickelGram 配置和 NickelMenu 配置。
 
-发布包适用于 32 位 ARM Linux Kobo 阅读器。
 
 ### 2. 正式安装
 
-1. 从 [latest release](https://github.com/raenut/NickelGram/releases/latest) 下载 Kobo ARM ZIP。
-2. 解压后，将其中的 `.adds` 文件夹合并到 Kobo 存储根目录，保留设备上已有的其他文件。
-3. 将 `.adds/nickelgram/config.example.json` 复制为同目录下的 `config.json`，填入 `telegram_bot_token` 和 `telegram_chat_id`。
-4. 安全弹出并重启 Kobo。
+1. 从 [Latest Release](https://github.com/raenut/NickelGram/releases/latest) 下载文件名以 `-kobo-arm.zip` 结尾的压缩包。
+2. 解压压缩包。
+3. 将其中的 `.adds` 文件夹合并到 Kobo 存储根目录，保留设备上已有的其他文件。
+4. 将 `.adds/nickelgram/config.example.json` 复制为同目录下的 `config.json`。
+5. 在 `config.json` 中填入 `telegram_bot_token` 和 `telegram_chat_id`。
+6. 安全弹出并重启 Kobo。
 
 ## 功能
 
@@ -58,4 +65,8 @@ NickelGram 通过 [NickelMenu](https://github.com/pgaskin/NickelMenu) 为 Kobo �
 - 部分选区或刚切换书籍后的分享结果可能不准确。
 - 不同设备和固件的兼容性尚未全面验证。目前测试设备为 Kobo Libra Colour 和 Kobo Clara 2E。
 
-项目按 [MIT 许可证](LICENSE) 提供。开发与本地测试说明见[本地测试文档](docs/LOCAL_TEST.md)，第三方组件信息见[第三方组件文档](docs/THIRD_PARTY.md)。
+项目按 [MIT 许可证](LICENSE) 提供。
+
+开发与本地测试说明见[本地测试文档](docs/LOCAL_TEST.md)。
+
+第三方组件信息见[第三方组件文档](docs/THIRD_PARTY.md)。
