@@ -32,7 +32,7 @@ The current release package targets 32-bit ARM Linux Kobo readers.
 
 - Install NickelMenu on your Kobo e-reader.
 - Prepare a Telegram Bot Token and the target chat's Chat ID.
-- Back up `.kobo/KoboReader.sqlite`, any existing NickelGram configuration, and your NickelMenu configuration.
+- Back up `.kobo/KoboReader.sqlite`, any existing NickelGram / NickelMenu configuration.
 
 ### 2. Installation
 
@@ -61,7 +61,8 @@ Keep `config.json` private because it contains your Bot Token and Chat ID.
 ## Limitations
 
 - Some selections or shares made immediately after switching books may be inaccurate.
-- Compatibility across devices and firmware versions has not been fully verified. Testing so far has covered Kobo Libra Colour and Kobo Clara 2E.
+- Compatibility across devices and firmware versions has not been fully verified.
+- Testing so far has covered Kobo Libra Colour and Kobo Clara 2E.
 
 See [Testing](docs/TESTING.md) for development and testing.
 
