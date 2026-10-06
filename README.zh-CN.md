@@ -12,6 +12,16 @@ NickelGram 通过 [NickelMenu](https://github.com/pgaskin/NickelMenu) 为 Kobo �
 
 可以发送选中文字或最近一条书摘，也可以把整本书的高亮和批注导出为 Markdown 文件。
 
+## 功能
+
+| 入口 | 菜单项 | 作用 |
+| --- | --- | --- |
+| 文字选区 | Send&nbsp;to&nbsp;Telegram | 发送选中文字及书名、作者 |
+| 阅读菜单 | Send&nbsp;Latest&nbsp;Highlight | 发送最近一条高亮或批注 |
+| 阅读菜单 | Export&nbsp;All&nbsp;Highlights | 导出并发送全书高亮与批注（Markdown） |
+
+导出的文件保存在 Kobo 存储根目录的 `Highlights/` 中。
+
 ## 适用设备
 
 当前发布包适用于 32 位 ARM Linux Kobo 阅读器。
@@ -48,23 +58,19 @@ NickelGram 通过 [NickelMenu](https://github.com/pgaskin/NickelMenu) 为 Kobo �
 
 请勿公开分享包含 Bot Token 和 Chat ID 的 `config.json`。
 
-## 功能
-
-| 入口 | 菜单项 | 作用 |
-| --- | --- | --- |
-| 文字选区 | Send&nbsp;to&nbsp;Telegram | 发送选中文字及书名、作者 |
-| 阅读菜单 | Send&nbsp;Latest&nbsp;Highlight | 发送最近一条高亮或批注 |
-| 阅读菜单 | Export&nbsp;All&nbsp;Highlights | 导出并发送全书高亮与批注（Markdown） |
-
-导出的文件保存在 Kobo 存储根目录的 `Highlights/` 中。
-
 ## 使用限制
 
 - 部分选区或刚切换书籍后的分享结果可能不准确。
 - 不同设备和固件的兼容性尚未全面验证。目前测试设备为 Kobo Libra Colour 和 Kobo Clara 2E。
 
-项目按 [MIT 许可证](LICENSE) 提供。
-
 开发与本地测试说明见[测试说明](docs/TESTING.md)。
 
 第三方组件信息见[第三方许可证](docs/THIRD_PARTY_LICENSES.md)。
+
+## 许可证
+
+本项目采用 [MIT 许可证](LICENSE)。版权所有 © 2026 NickelGram contributors。
+
+---
+
+Made with 🤍 by [raenut](https://github.com/raenut) 👩🏻‍💻

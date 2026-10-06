@@ -12,6 +12,16 @@ NickelGram adds Telegram sharing to Kobo e-readers through [NickelMenu](https://
 
 Send selected text or the latest highlight, or export a book's highlights and annotations as a Markdown file.
 
+## Features
+
+| Where | Menu entry | Result |
+| --- | --- | --- |
+| Selection | Send&nbsp;to&nbsp;Telegram | Sends selected text with the book title and author |
+| Reader | Send&nbsp;Latest&nbsp;Highlight | Sends the latest highlight or annotation |
+| Reader | Export&nbsp;All&nbsp;Highlights | Exports and sends all highlights and annotations as Markdown |
+
+Exported files are saved in `Highlights/` at the root of Kobo storage.
+
 ## Supported Devices
 
 The current release package targets 32-bit ARM Linux Kobo readers.
@@ -48,23 +58,19 @@ Set these parameters in `.adds/nickelgram/config.json`:
 
 Keep `config.json` private because it contains your Bot Token and Chat ID.
 
-## Features
-
-| Where | Menu entry | Result |
-| --- | --- | --- |
-| Selection | Send&nbsp;to&nbsp;Telegram | Sends selected text with the book title and author |
-| Reader | Send&nbsp;Latest&nbsp;Highlight | Sends the latest highlight or annotation |
-| Reader | Export&nbsp;All&nbsp;Highlights | Exports and sends all highlights and annotations as Markdown |
-
-Exported files are saved in `Highlights/` at the root of Kobo storage.
-
 ## Limitations
 
 - Some selections or shares made immediately after switching books may be inaccurate.
 - Compatibility across devices and firmware versions has not been fully verified. Testing so far has covered Kobo Libra Colour and Kobo Clara 2E.
 
-Released under the [MIT License](LICENSE).
-
 See [Testing](docs/TESTING.md) for development and testing.
 
 See [Third-Party Licenses](docs/THIRD_PARTY_LICENSES.md) for bundled component details.
+
+## License
+
+Licensed under the [MIT License](LICENSE). Copyright © 2026 NickelGram contributors.
+
+---
+
+Made with 🤍 by [raenut](https://github.com/raenut) 👩🏻‍💻
