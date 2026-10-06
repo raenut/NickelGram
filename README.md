@@ -1,72 +1,70 @@
 <p align="center">
-  <img src="assets/nickelgram-icon.svg" alt="NickelGram 图标" width="144" height="144">
+  <img src="assets/nickelgram-icon.svg" alt="NickelGram icon" width="144" height="144">
 </p>
 
 # NickelGram
 
-[English](README.en.md) · [Latest Release](https://github.com/raenut/NickelGram/releases/latest)
+[简体中文](README.zh-CN.md) · [Latest Release](https://github.com/raenut/NickelGram/releases/latest)
 
-[![最新版本](https://img.shields.io/github/v/release/raenut/NickelGram?label=release&color=788c96)](https://github.com/raenut/NickelGram/releases/latest) [![许可证](https://img.shields.io/github/license/raenut/NickelGram?color=788c96)](LICENSE)
+[![Latest Release](https://img.shields.io/github/v/release/raenut/NickelGram?label=release&color=788c96)](https://github.com/raenut/NickelGram/releases/latest) [![License](https://img.shields.io/github/license/raenut/NickelGram?color=788c96)](LICENSE)
 
-NickelGram 通过 [NickelMenu](https://github.com/pgaskin/NickelMenu) 为 Kobo 阅读器添加 Telegram 分享功能。
+NickelGram adds Telegram sharing to Kobo e-readers through [NickelMenu](https://github.com/pgaskin/NickelMenu).
 
-可以发送选中文字或最近一条书摘，也可以把整本书的高亮和批注导出为 Markdown 文件。
+Send selected text or the latest highlight, or export a book's highlights and annotations as a Markdown file.
 
-## 适用设备
+## Supported devices
 
-当前发布包适用于 32 位 ARM Linux Kobo 阅读器。
+The current release package targets 32-bit ARM Linux Kobo readers.
 
-## 快速使用
+## Quick start
 
-### 1. 准备工作
+### 1. Preparation
 
-- 在 Kobo 阅读器上安装 NickelMenu。
-- 准备 Telegram Bot Token 和目标聊天的 Chat ID。
-- 备份 `.kobo/KoboReader.sqlite`、已有的 NickelGram 配置和 NickelMenu 配置。
+- Install NickelMenu on your Kobo e-reader.
+- Prepare a Telegram Bot Token and the target chat's Chat ID.
+- Back up `.kobo/KoboReader.sqlite`, any existing NickelGram configuration, and your NickelMenu configuration.
 
+### 2. Installation
 
-### 2. 正式安装
+1. Download the archive ending in `-kobo-arm.zip` from the [Latest Release](https://github.com/raenut/NickelGram/releases/latest) and extract it.
+2. Merge the extracted `.adds` folder into the root of Kobo storage, keeping your other existing files.
+3. Copy `.adds/nickelgram/config.example.json` to `config.json` in the same folder.
+4. Enter `telegram_bot_token` and `telegram_chat_id` in `config.json`.
+5. Safely eject and restart your Kobo.
 
-1. 从 [Latest Release](https://github.com/raenut/NickelGram/releases/latest) 下载文件名以 `-kobo-arm.zip` 结尾的压缩包。
-2. 解压压缩包。
-3. 将其中的 `.adds` 文件夹合并到 Kobo 存储根目录，保留设备上已有的其他文件。
-4. 将 `.adds/nickelgram/config.example.json` 复制为同目录下的 `config.json`。
-5. 在 `config.json` 中填入 `telegram_bot_token` 和 `telegram_chat_id`。
-6. 安全弹出并重启 Kobo。
+## Configuration
 
-## 功能
+Set these parameters in `.adds/nickelgram/config.json`:
 
-| 入口 | 菜单项 | 作用 |
-| --- | --- | --- |
-| 选中文字后的菜单 | Send to Telegram | 连同书名、作者发送选中文字 |
-| 阅读器菜单 | Send Latest Highlight | 发送当前书籍最近一条可见高亮或批注 |
-| 阅读器菜单 | Export All Highlights | 导出当前书籍的高亮与批注为 Markdown，并将文件发送到 Telegram |
-
-导出的文件保存在 Kobo 存储根目录的 `Highlights/` 中。
-
-## 配置
-
-在 `.adds/nickelgram/config.json` 中设置以下参数：
-
-| 参数 | 说明 | 示例 |
+| Parameter | Description | Example |
 | --- | --- | --- |
 | `telegram_bot_token` | Telegram Bot Token | `"YOUR_BOT_TOKEN"` |
-| `telegram_chat_id` | 目标聊天的 Chat ID | `"YOUR_CHAT_ID"` |
-| `footer` | 是否在 Telegram 消息中添加页脚 | `true` |
-| `footer_text` | Telegram 消息的页脚文字 | `"📖 来自 Kobo"` |
-| `md_footer` | 是否在导出的 Markdown 中添加页脚 | `true` |
-| `md_footer_text` | Markdown 页脚文字 | `"*📖 摘自 Kobo*"` |
-| `md_tags` | 导出文件的标签 | `["书摘", "文学"]` |
+| `telegram_chat_id` | Target chat's Chat ID | `"YOUR_CHAT_ID"` |
+| `footer` | Add a footer to Telegram messages | `true` |
+| `footer_text` | Telegram message footer | `"📖 From Kobo"` |
+| `md_footer` | Add a footer to exported Markdown | `true` |
+| `md_footer_text` | Markdown footer text | `"*📖 From Kobo*"` |
+| `md_tags` | Tags for exported files | `["highlights", "literature"]` |
 
-请勿公开分享包含 Bot Token 和 Chat ID 的 `config.json`。
+Keep `config.json` private because it contains your Bot Token and Chat ID.
 
-## 使用限制
+## Features
 
-- 部分选区或刚切换书籍后的分享结果可能不准确。
-- 不同设备和固件的兼容性尚未全面验证。目前测试设备为 Kobo Libra Colour 和 Kobo Clara 2E。
+| Where | Menu entry | Result |
+| --- | --- | --- |
+| Selection | Send&nbsp;to&nbsp;Telegram | Sends selected text with the book title and author |
+| Reader | Send&nbsp;Latest&nbsp;Highlight | Sends the latest highlight or annotation |
+| Reader | Export&nbsp;All&nbsp;Highlights | Exports and sends all highlights and annotations as Markdown |
 
-项目按 [MIT 许可证](LICENSE) 提供。
+Exported files are saved in `Highlights/` at the root of Kobo storage.
 
-开发与本地测试说明见[本地测试文档](docs/LOCAL_TEST.md)。
+## Limitations
 
-第三方组件信息见[第三方组件文档](docs/THIRD_PARTY.md)。
+- Some selections or shares made immediately after switching books may be inaccurate.
+- Compatibility across devices and firmware versions has not been fully verified. Testing so far has covered Kobo Libra Colour and Kobo Clara 2E.
+
+Released under the [MIT License](LICENSE).
+
+See [Local Testing](docs/LOCAL_TEST.md) for development and testing.
+
+See [Third-party Components](docs/THIRD_PARTY.md) for bundled component details.

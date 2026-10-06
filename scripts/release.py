@@ -38,7 +38,7 @@ phoff=struct.unpack_from('<I',binary,28)[0]
 entsize,count=struct.unpack_from('<HH',binary,42)
 assert all(struct.unpack_from('<I',binary,phoff+i*entsize)[0] not in (2,3) for i in range(count))
 
-for source,target in [('README.md','README.md'),('README.en.md','README.en.md'),('assets/nickelgram-icon.svg','assets/nickelgram-icon.svg'),('LICENSE','LICENSE'),('docs/THIRD_PARTY.md','docs/THIRD_PARTY.md')]:
+for source,target in [('README.md','README.md'),('README.zh-CN.md','README.zh-CN.md'),('assets/nickelgram-icon.svg','assets/nickelgram-icon.svg'),('LICENSE','LICENSE'),('docs/THIRD_PARTY.md','docs/THIRD_PARTY.md')]:
     (app/target).parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(ROOT/source, app/target)
 
@@ -64,7 +64,7 @@ def archive(path, files):
 package=dist/f'NickelGram-{VERSION}-kobo-arm.zip'
 archive(package,[(p,p.relative_to(stage).as_posix(),p.name in ('nickelgram.sh','nickelgram','sqlite3')) for p in stage.rglob('*') if p.is_file()])
 
-source_files=[ROOT/n for n in ('.gitignore','go.mod','LICENSE','README.md','README.en.md','assets/nickelgram-icon.svg','test.sh')]
+source_files=[ROOT/n for n in ('.gitignore','go.mod','LICENSE','README.md','README.zh-CN.md','assets/nickelgram-icon.svg','test.sh')]
 for folder in ('cmd','scripts','docs','payload'):
     source_files += [p for p in (ROOT/folder).rglob('*') if p.is_file() and '__pycache__' not in p.parts and p.suffix != '.pyc']
 assert not any(p.name=='config.json' or 'state' in p.relative_to(ROOT).parts for p in source_files)
