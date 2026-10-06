@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">NickelGram icon concept</title>
+  <desc id="desc">A muted blue-gray geometric open book with an abstract paper plane at its center.</desc>
+  <rect width="512" height="512" rx="112" fill="#F1F2F0"/>
+  <g fill="#788C96">
+    <path d="M62 176h74v-64h64v64h-64v147h64v62H62V176Z"/>
+    <path d="M450 176h-74v-64h-64v64h64v147h-64v62h138V176Z"/>
+    <path d="M200 323h112v62H200z"/>
+  </g>
+  <circle cx="256" cy="250" r="88" fill="#F1F2F0"/>
+  <path fill="#788C96" stroke="#788C96" stroke-width="3" stroke-linejoin="round" d="m195 247 124-49-56 110-14-44-54-17Z"/>
+  <path fill="#566F7C" stroke="#566F7C" stroke-width="2" stroke-linejoin="round" d="m249 264 70-66-56 110-14-44Z"/>
+</svg>
