@@ -1,0 +1,3 @@
+menu_item :selection :Send to Telegram :cmd_output :9500:/bin/sh /mnt/onboard/.adds/nickelgram/nickelgram.sh send-selection '{1||$}'
+menu_item :reader :Send Latest Highlight :cmd_output :9500:/bin/sh /mnt/onboard/.adds/nickelgram/nickelgram.sh send-latest-highlight
+menu_item :reader :Export Highlights to Telegram :cmd_output :9500:/bin/sh /mnt/onboard/.adds/nickelgram/nickelgram.sh export-book

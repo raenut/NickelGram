@@ -1,0 +1,36 @@
+# Local configuration and credentials
+**/config.json
+.env
+.env.*
+**/.env
+**/.env.*
+*.key
+*.p12
+*.pfx
+*.pem
+!payload/.adds/nickelgram/cacert.pem
+.netrc
+id_rsa*
+id_ed25519*
+
+# Private Kobo data and runtime output
+*.sqlite
+*.sqlite-*
+*.db
+*.db-*
+**/exports/
+**/state/
+*.log
+*.tmp
+
+# Local work, caches, and generated packages
+/local-test/
+/work/
+/build/
+/dist/
+*.zip
+*.tgz
+*.tar.gz
+__pycache__/
+*.pyc
+.DS_Store
