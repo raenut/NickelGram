@@ -14,7 +14,7 @@ NickelGram 是一个为 Kobo 阅读器与 NickelMenu 设计的轻量工具，可
 
 - **最新高亮或批注**：从 Reader 菜单发送数据库中识别到的当前书籍最新一条可见高亮或批注。
 
-- **整书导出**：将当前书籍中识别到的可见高亮与批注导出为 `.md` 文件，并作为 Telegram 文件发送。导出的 Markdown 包含 YAML front matter、<hr> 分隔线、可配置标签以及独立的 Markdown `footer`。
+- **整书导出**：将当前书籍中识别到的可见高亮与批注导出为 `.md` 文件，并作为 Telegram 文件发送。导出的 Markdown 包含 YAML front matter、`<hr>` 分隔线、可配置标签以及独立的 Markdown `footer`。
 
 ## 安装
 
