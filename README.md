@@ -12,11 +12,11 @@ NickelGram adds Telegram sharing to Kobo e-readers through [NickelMenu](https://
 
 Send selected text or the latest highlight, or export a book's highlights and annotations as a Markdown file.
 
-## Supported devices
+## Supported Devices
 
 The current release package targets 32-bit ARM Linux Kobo readers.
 
-## Quick start
+## Quick Start
 
 ### 1. Preparation
 
@@ -65,6 +65,6 @@ Exported files are saved in `Highlights/` at the root of Kobo storage.
 
 Released under the [MIT License](LICENSE).
 
-See [Local Testing](docs/LOCAL_TEST.md) for development and testing.
+See [Local Testing](docs/TESTING.md) for development and testing.
 
-See [Third-party Components](docs/THIRD_PARTY.md) for bundled component details.
+See [Third-party Components](docs/THIRD_PARTY_LICENSES.md) for bundled component details.

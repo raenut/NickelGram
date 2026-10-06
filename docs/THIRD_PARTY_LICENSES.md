@@ -1,4 +1,4 @@
-# Third-party Components & Licenses
+# Third-Party Components & Licenses
 
 - **Original NickelGram source code**
 

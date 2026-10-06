@@ -65,6 +65,6 @@ NickelGram 通过 [NickelMenu](https://github.com/pgaskin/NickelMenu) 为 Kobo �
 
 项目按 [MIT 许可证](LICENSE) 提供。
 
-开发与本地测试说明见[本地测试文档](docs/LOCAL_TEST.md)。
+开发与本地测试说明见[本地测试文档](docs/TESTING.md)。
 
-第三方组件信息见[第三方组件文档](docs/THIRD_PARTY.md)。
+第三方组件信息见[第三方组件文档](docs/THIRD_PARTY_LICENSES.md)。

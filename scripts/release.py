@@ -38,7 +38,7 @@ phoff=struct.unpack_from('<I',binary,28)[0]
 entsize,count=struct.unpack_from('<HH',binary,42)
 assert all(struct.unpack_from('<I',binary,phoff+i*entsize)[0] not in (2,3) for i in range(count))
 
-for source,target in [('README.md','README.md'),('README.zh-CN.md','README.zh-CN.md'),('assets/nickelgram-icon.svg','assets/nickelgram-icon.svg'),('LICENSE','LICENSE'),('docs/THIRD_PARTY.md','docs/THIRD_PARTY.md')]:
+for source,target in [('README.md','README.md'),('README.zh-CN.md','README.zh-CN.md'),('assets/nickelgram-icon.svg','assets/nickelgram-icon.svg'),('LICENSE','LICENSE'),('docs/THIRD_PARTY_LICENSES.md','docs/THIRD_PARTY_LICENSES.md')]:
     (app/target).parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(ROOT/source, app/target)
 
