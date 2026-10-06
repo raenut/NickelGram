@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 )
 
 // runDebug is only entered through the explicit local debug command. It never
@@ -200,7 +201,7 @@ func runDebug(args []string) error {
 		}
 		name := safeMarkdownName(book.Title, book.Volume)
 		path := filepath.Join(outDir, name)
-		content := bookMarkdown(book, marks, mdFooter, mdTags)
+		content := bookMarkdown(book, marks, mdFooter, mdTags, time.Now())
 		if err := os.WriteFile(path, []byte(content), 0600); err != nil {
 			return err
 		}

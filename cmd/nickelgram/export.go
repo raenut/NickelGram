@@ -6,10 +6,14 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
+	"time"
 	"unicode"
 )
+
+const exportDir = "/mnt/onboard/Highlights"
 
 func safeMarkdownName(title, volume string) string {
 	name := strings.Map(func(r rune) rune {
@@ -35,12 +39,26 @@ func yamlString(value string) string {
 	return string(encoded)
 }
 
-func bookMarkdown(book RecentBook, marks []Highlight, footer string, tags []string) string {
+func chapterHeading(title string) string {
+	title = strings.TrimSpace(strings.NewReplacer("\r", " ", "\n", " ").Replace(title))
+	if title == "" {
+		return "未知章节"
+	}
+	cleanPath := strings.ReplaceAll(title, "\\", "/")
+	lower := strings.ToLower(cleanPath)
+	if strings.HasSuffix(lower, ".html") || strings.HasSuffix(lower, ".htm") || strings.HasSuffix(lower, ".xhtml") {
+		return path.Base(cleanPath)
+	}
+	return title
+}
+
+func bookMarkdown(book RecentBook, marks []Highlight, footer string, tags []string, exportedAt time.Time) string {
 	var out strings.Builder
 	out.WriteString("---\n")
 	out.WriteString("title: " + yamlString(strings.TrimSpace(book.Title)) + "\n")
 	out.WriteString("author: " + yamlString(strings.TrimSpace(book.Author)) + "\n")
 	out.WriteString("source: kobo\n")
+	out.WriteString("exported_at: " + yamlString(exportedAt.Format("2006-01-02 15:04:05")) + "\n")
 	cleanTags := make([]string, 0, len(tags))
 	for _, tag := range tags {
 		if tag = strings.TrimSpace(tag); tag != "" {
@@ -56,8 +74,15 @@ func bookMarkdown(book RecentBook, marks []Highlight, footer string, tags []stri
 		}
 	}
 	out.WriteString("---\n")
+	previousChapterID := ""
+	firstMark := true
 	for _, mark := range marks {
 		out.WriteString("\n<hr>\n\n")
+		if firstMark || mark.ChapterID != previousChapterID {
+			out.WriteString("## " + chapterHeading(mark.Chapter) + "\n\n")
+			previousChapterID = mark.ChapterID
+			firstMark = false
+		}
 		lines := strings.Split(strings.ReplaceAll(strings.TrimSpace(mark.Text), "\r\n", "\n"), "\n")
 		for _, line := range lines {
 			out.WriteString("> " + line + "\n")
@@ -101,13 +126,12 @@ func runExportBook(root string) error {
 	if len(marks) == 0 {
 		return errors.New("当前书没有可用的高亮或批注；未发送。")
 	}
-	dir := filepath.Join(root, "exports")
-	if err = os.MkdirAll(dir, 0700); err != nil {
+	if err = os.MkdirAll(exportDir, 0700); err != nil {
 		return errors.New("无法创建导出目录；未发送。")
 	}
 	name := safeMarkdownName(book.Title, book.Volume)
-	path := filepath.Join(dir, name)
-	if err = os.WriteFile(path, []byte(bookMarkdown(book, marks, c.MDFooter, c.MDTags)), 0600); err != nil {
+	path := filepath.Join(exportDir, name)
+	if err = os.WriteFile(path, []byte(bookMarkdown(book, marks, c.MDFooter, c.MDTags, time.Now())), 0600); err != nil {
 		return errors.New("无法写入 Markdown 文件；未发送。")
 	}
 	outcome := tg.SendDocument(c, path, name)

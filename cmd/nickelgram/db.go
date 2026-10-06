@@ -27,6 +27,8 @@ type Highlight struct {
 	Volume     string `json:"volume"`
 	Text       string `json:"text"`
 	Annotation string `json:"annotation"`
+	Chapter    string `json:"chapter"`
+	ChapterID  string `json:"chapter_id"`
 	Modified   string `json:"modified"`
 }
 
@@ -191,17 +193,23 @@ func decodeHighlight(mark Highlight) (Highlight, error) {
 	return mark, nil
 }
 
-// readBookHighlights uses the ordering from the earlier notes.zip based exporter.
+// readBookHighlights follows the book's content order, then each mark's position
+// within that content. Marks without a matching content row sort last.
 func readBookHighlights(binary, lib, db string, book RecentBook) ([]Highlight, error) {
 	volumeHex := strings.ToUpper(hex.EncodeToString([]byte(book.Volume)))
-	query := `SELECT hex(Text) AS text,
- hex(COALESCE(Annotation,'')) AS annotation
- FROM Bookmark
- WHERE hex(VolumeID)='` + volumeHex + `'
-   AND Type IN ('highlight','note')
-   AND length(trim(COALESCE(Text,'')))>0
-   AND lower(COALESCE(CAST(Hidden AS TEXT),'false')) NOT IN ('1','true')
- ORDER BY DateCreated,BookmarkID;`
+	query := `SELECT hex(b.Text) AS text,
+	 hex(COALESCE(b.Annotation,'')) AS annotation,
+	 hex(COALESCE(chapter.Title,'')) AS chapter,
+	 hex(b.ContentID) AS chapter_id
+	 FROM Bookmark b
+	 LEFT JOIN content chapter ON chapter.ContentID=b.ContentID
+	   AND chapter.BookID=b.VolumeID AND CAST(chapter.ContentType AS TEXT)='9'
+	 WHERE hex(b.VolumeID)='` + volumeHex + `'
+	   AND b.Type IN ('highlight','note')
+	   AND length(trim(COALESCE(b.Text,'')))>0
+	   AND lower(COALESCE(CAST(b.Hidden AS TEXT),'false')) NOT IN ('1','true')
+	 ORDER BY chapter.VolumeIndex IS NULL, CAST(chapter.VolumeIndex AS INTEGER),
+	          b.ChapterProgress, b.BookmarkID;`
 	out, err := sqliteQuery(binary, lib, db, query)
 	if err != nil {
 		return nil, err
@@ -215,6 +223,12 @@ func readBookHighlights(binary, lib, db string, book RecentBook) ([]Highlight, e
 			return nil, err
 		}
 		if rows[i].Annotation, err = decodeHexField(rows[i].Annotation); err != nil {
+			return nil, err
+		}
+		if rows[i].Chapter, err = decodeHexField(rows[i].Chapter); err != nil {
+			return nil, err
+		}
+		if rows[i].ChapterID, err = decodeHexField(rows[i].ChapterID); err != nil {
 			return nil, err
 		}
 	}

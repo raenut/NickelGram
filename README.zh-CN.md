@@ -8,6 +8,12 @@ NickelGram 是一个为 Kobo 阅读器与 NickelMenu 设计的轻量工具，可
 
 ## 功能
 
+### v0.1.1 更新（待发布）
+
+- **整书书摘顺序**：按书籍内容顺序和书摘在该内容中的位置导出，而不是按高亮创建时间排序。缺少章节位置记录的书摘排在有位置记录的书摘之后。
+- **章节与导出时间**：每个章节使用 Markdown 标题，同一内容段的连续书摘归在该标题下；每条书摘仍以 `<hr>` 分隔。HTML 文件路径只显示文件名，例如 `part0043.xhtml`。YAML front matter 增加精确到秒、不含时区的 `exported_at`；不添加 `Highlights` 标题。
+- **菜单与保存位置**：Reader 菜单的整书导出项改为 **Export All Highlights**。导出的 `.md` 保存到 Kobo 磁盘根目录的 `Highlights/` 文件夹，仍会作为文件发送到 Telegram。这里的“All”指当前书籍的全部可见高亮与批注。
+
 ### v0.1.0
 
 - **选中分享**：在文字选区菜单中，将当前选中的内容作为普通 Telegram 消息发送，并附带书名、作者以及可选的 `footer`。
@@ -22,7 +28,7 @@ NickelGram 是一个为 Kobo 阅读器与 NickelMenu 设计的轻量工具，可
 
 当前发布包针对 32 位 ARM Linux 构建，尚未验证其他架构。安装前建议备份 `.kobo/KoboReader.sqlite`、现有的 `.adds/nickelgram/config.json` 以及 NickelMenu 配置。
 
-1. 从 [v0.1.0 Release](https://github.com/raenut/NickelGram/releases/tag/v0.1.0) 下载 `NickelGram-0.1.0-kobo-arm.zip`。
+1. v0.1.1 发布后使用对应的 `NickelGram-0.1.1-kobo-arm.zip`；目前已发布的安装包仍可从 [v0.1.0 Release](https://github.com/raenut/NickelGram/releases/tag/v0.1.0) 下载。v0.1.0 安装包不包含上面的 v0.1.1 更新。
 
 2. 解压压缩包，将其中的 `.adds` 目录合并到 Kobo 磁盘根目录。不要删除原有 `.adds` 中的其他内容。包内的 `.adds/nm/nickelgram` 会添加三个 NickelMenu 菜单项。
 
@@ -60,19 +66,19 @@ NickelGram 是一个为 Kobo 阅读器与 NickelMenu 设计的轻量工具，可
 | --- | --- |
 | 选中文字后的菜单 | **Send to Telegram** — 发送当前选中的文字 |
 | 阅读时右上角 Reader 菜单 | **Send Latest Highlight** — 发送最新高亮或批注 |
-| 阅读时右上角 Reader 菜单 | **Export Highlights to Telegram** — 导出并发送整书 `.md` |
+| 阅读时右上角 Reader 菜单 | **Export All Highlights** — 导出并发送当前书籍的全部可见高亮与批注 `.md` |
 
 导出的 Markdown 文件保存在：
 
 ```text
-.adds/nickelgram/exports/
+Highlights/
 ```
 
 文件名由书名以及基于 Kobo `ContentID` 生成的短标识组成。重复导出同一本书时会使用相同的文件名。
 
 电脑端测试和重复测试命令见[本地测试说明](docs/LOCAL_TEST.md)。
 
-Release 同时提供源码包 `NickelGram-0.1.0-source.zip` 与 `SHA256SUMS`。
+v0.1.1 打包脚本会生成 `NickelGram-0.1.1-source.zip`、设备安装包与 `SHA256SUMS`。
 
 ## 已知问题与限制
 

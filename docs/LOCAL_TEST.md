@@ -34,7 +34,7 @@ local-test/
 ./test.sh export-md '<list-books 输出的书籍标识>'
 ```
 
-`latest-highlight` 和 `export-md` 的书籍标识也可填 `current`。`./test.sh current-book` 显示正式代码当前推断的书籍。`render-message` 写入 `output/message.txt`；`export-md` 写入带书名与短标识的 `.md`。
+`latest-highlight` 和 `export-md` 的书籍标识也可填 `current`。`./test.sh current-book` 显示正式代码当前推断的书籍。`render-message` 写入 `output/message.txt`；`export-md` 写入带书名与短标识的 `.md`。v0.1.1 的 `export-md` 预览按书中位置排序，包含章节标题和不带时区的 `exported_at`。电脑端预览仍保存在 `local-test/output/`；Kobo 上的正式导出保存到磁盘根目录的 `Highlights/`。
 
 排查跨段换行可运行：
 

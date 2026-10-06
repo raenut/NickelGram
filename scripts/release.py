@@ -3,7 +3,7 @@ import hashlib, json, os, re, shutil, struct, subprocess, zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = '0.1.0'
+VERSION = '0.1.1'
 GO_VERSION = 'go1.26.8'
 TOKEN_PATTERN = re.compile(rb'(?<![A-Za-z0-9])\d{6,}:[A-Za-z0-9_-]{20,}(?![A-Za-z0-9])')
 PRIVATE_ID_PATTERN = re.compile(rb'"(?:telegram_)?(?:chat_id|channel_id|username)"\s*:\s*"(?:-?[0-9]{4,}|@[A-Za-z0-9_]+)"')
@@ -64,7 +64,7 @@ def archive(path, files):
 package=dist/f'NickelGram-{VERSION}-kobo-arm.zip'
 archive(package,[(p,p.relative_to(stage).as_posix(),p.name in ('nickelgram.sh','nickelgram','sqlite3')) for p in stage.rglob('*') if p.is_file()])
 
-source_files=[ROOT/n for n in ('.gitignore','go.mod','LICENSE','README.md','test.sh')]
+source_files=[ROOT/n for n in ('.gitignore','go.mod','LICENSE','README.md','README.zh-CN.md','test.sh')]
 for folder in ('cmd','scripts','docs','payload'):
     source_files += [p for p in (ROOT/folder).rglob('*') if p.is_file() and '__pycache__' not in p.parts and p.suffix != '.pyc']
 assert not any(p.name=='config.json' or 'state' in p.relative_to(ROOT).parts for p in source_files)

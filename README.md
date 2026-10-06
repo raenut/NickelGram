@@ -8,6 +8,12 @@ The project is still at an early stage. Features, compatibility, and usage may c
 
 ## Features
 
+### v0.1.1 update (pending release)
+
+- **Book order**: Export highlights in book content order and by their position within that content, rather than by creation time. Highlights without matching position data follow those with known positions.
+- **Chapters and export time**: Use Markdown chapter headings that can be folded in editors which support heading folding, grouping consecutive highlights from the same content section while keeping an `<hr>` separator for each highlight. Show only the filename for HTML paths, such as `part0043.xhtml`. YAML front matter now includes `exported_at` to the second without a time zone; there is no `Highlights` heading.
+- **Menu and location**: The Reader menu entry is now **Export All Highlights**. The `.md` file is saved in `Highlights/` at the root of Kobo storage and is still sent to Telegram. “All” means every visible highlight and annotation in the current book.
+
 ### v0.1.0
 
 - **Share Selection**: Send the currently selected text as a regular Telegram message from the selection menu, together with the book title, author, and an optional `footer`.
@@ -22,7 +28,7 @@ A Kobo e-reader with NickelMenu installed is required.
 
 The current release package is built for 32-bit ARM Linux and has not been verified on other architectures. Before installation, it is recommended to back up `.kobo/KoboReader.sqlite`, any existing `.adds/nickelgram/config.json`, and your NickelMenu configuration.
 
-1. Download `NickelGram-0.1.0-kobo-arm.zip` from the [v0.1.0 Release](https://github.com/raenut/NickelGram/releases/tag/v0.1.0).
+1. When v0.1.1 is published, use `NickelGram-0.1.1-kobo-arm.zip`. The latest published package can currently be downloaded from the [v0.1.0 Release](https://github.com/raenut/NickelGram/releases/tag/v0.1.0); that package does not include the v0.1.1 changes above.
 
 2. Extract the archive and merge the included `.adds` directory into the root of the Kobo storage. Do not remove other existing contents inside `.adds`. The bundled `.adds/nm/nickelgram` adds three NickelMenu entries.
 
@@ -60,19 +66,19 @@ The legacy `"footer": "text"` format is still supported for regular messages.
 | --- | --- |
 | Text selection menu | **Send to Telegram** — Send the selected text |
 | Reader menu | **Send Latest Highlight** — Send the latest highlight or annotation |
-| Reader menu | **Export Highlights to Telegram** — Export and send the book's highlights as `.md` |
+| Reader menu | **Export All Highlights** — Export and send all visible highlights and annotations from the current book as `.md` |
 
 Exported Markdown files are stored in:
 
 ```text
-.adds/nickelgram/exports/
+Highlights/
 ```
 
 The filename consists of the book title and a short identifier derived from the Kobo `ContentID`. Re-exporting the same book uses the same filename.
 
 For local testing and repeatable test commands, see [Local Testing](docs/LOCAL_TEST.md).
 
-The Release also includes the source archive `NickelGram-0.1.0-source.zip` and `SHA256SUMS`.
+The v0.1.1 packaging script produces `NickelGram-0.1.1-source.zip`, the device package, and `SHA256SUMS`.
 
 ## Known Issues & Limitations
 
