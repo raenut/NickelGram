@@ -8,7 +8,7 @@ NickelGram 是一个为 Kobo 阅读器与 NickelMenu 设计的轻量工具，可
 
 ## 功能
 
-### v0.1.1 更新（待发布）
+### v0.1.1 更新
 
 - **整书书摘顺序**：按书籍内容顺序和书摘在该内容中的位置导出，而不是按高亮创建时间排序。缺少章节位置记录的书摘排在有位置记录的书摘之后。
 - **章节与导出时间**：每个章节使用 Markdown 标题，同一内容段的连续书摘归在该标题下；每条书摘仍以 `<hr>` 分隔。HTML 文件路径只显示文件名，例如 `part0043.xhtml`。YAML front matter 增加精确到秒、不含时区的 `exported_at`；不添加 `Highlights` 标题。
@@ -28,7 +28,7 @@ NickelGram 是一个为 Kobo 阅读器与 NickelMenu 设计的轻量工具，可
 
 当前发布包针对 32 位 ARM Linux 构建，尚未验证其他架构。安装前建议备份 `.kobo/KoboReader.sqlite`、现有的 `.adds/nickelgram/config.json` 以及 NickelMenu 配置。
 
-1. v0.1.1 发布后使用对应的 `NickelGram-0.1.1-kobo-arm.zip`；目前已发布的安装包仍可从 [v0.1.0 Release](https://github.com/raenut/NickelGram/releases/tag/v0.1.0) 下载。v0.1.0 安装包不包含上面的 v0.1.1 更新。
+1. 从 [v0.1.1 Release](https://github.com/raenut/NickelGram/releases/tag/v0.1.1) 下载 `NickelGram-0.1.1-kobo-arm.zip`。
 
 2. 解压压缩包，将其中的 `.adds` 目录合并到 Kobo 磁盘根目录。不要删除原有 `.adds` 中的其他内容。包内的 `.adds/nm/nickelgram` 会添加三个 NickelMenu 菜单项。
 
@@ -78,7 +78,7 @@ Highlights/
 
 电脑端测试和重复测试命令见[本地测试说明](docs/LOCAL_TEST.md)。
 
-v0.1.1 打包脚本会生成 `NickelGram-0.1.1-source.zip`、设备安装包与 `SHA256SUMS`。
+Release 同时提供源码包 `NickelGram-0.1.1-source.zip` 与 `SHA256SUMS`。
 
 ## 已知问题与限制
 
@@ -92,11 +92,11 @@ v0.1.1 打包脚本会生成 `NickelGram-0.1.1-source.zip`、设备安装包与 
 
   当前正式支持的三个入口是：普通选中分享、保存高亮或批注后的 Reader 菜单分享，以及整书导出。
 
-- **v0.1.0 实机回归测试**：本地数据库查询、格式化逻辑以及 ARM 构建已经验证，但 [v0.1.0 Release](https://github.com/raenut/NickelGram/releases/tag/v0.1.0) 包在真实设备上的三个完整菜单流程、Telegram 实际发送以及不同固件版本之间的兼容性仍需要进一步验证。
+- **v0.1.1 实机回归测试**：本地数据库查询、格式化逻辑以及 ARM 构建已经验证，但 [v0.1.1 Release](https://github.com/raenut/NickelGram/releases/tag/v0.1.1) 包在真实设备上的三个完整菜单流程、Telegram 实际发送以及不同固件版本之间的兼容性仍需要进一步验证。
 
 ## 风险声明
 
-NickelGram v0.1.0 是一个早期版本，可能仍包含 Bug，并可能受到 Kobo 数据库状态变化、固件或 NickelMenu 兼容性、网络或 Telegram 发送失败、书籍识别错误，以及安装或运行过程中意外数据丢失等问题影响。
+NickelGram v0.1.1 是一个早期版本，可能仍包含 Bug，并可能受到 Kobo 数据库状态变化、固件或 NickelMenu 兼容性、网络或 Telegram 发送失败、书籍识别错误，以及安装或运行过程中意外数据丢失等问题影响。
 
 安装前请自行备份设备数据与相关配置，并根据自己的情况判断是否使用。本项目按照 [LICENSE](LICENSE) 中的条款以“现状”提供，不保证适用于任何特定用途。
 
@@ -109,7 +109,7 @@ NickelGram v0.1.0 是一个早期版本，可能仍包含 Bug，并可能受到 
 - 测试时对应设备的最新固件
 - NickelMenu 0.6.0
 
-其他 Kobo 设备、固件版本以及 NickelMenu 版本尚未验证。v0.1.0 Release 包也尚未在上述设备上完成完整的端到端回归测试。
+其他 Kobo 设备、固件版本以及 NickelMenu 版本尚未验证。v0.1.1 Release 包也尚未在上述设备上完成完整的端到端回归测试。
 
 ## 第三方组件与许可证
 

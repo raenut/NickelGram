@@ -8,7 +8,7 @@ The project is still at an early stage. Features, compatibility, and usage may c
 
 ## Features
 
-### v0.1.1 update (pending release)
+### v0.1.1 update
 
 - **Book order**: Export highlights in book content order and by their position within that content, rather than by creation time. Highlights without matching position data follow those with known positions.
 - **Chapters and export time**: Use Markdown chapter headings that can be folded in editors which support heading folding, grouping consecutive highlights from the same content section while keeping an `<hr>` separator for each highlight. Show only the filename for HTML paths, such as `part0043.xhtml`. YAML front matter now includes `exported_at` to the second without a time zone; there is no `Highlights` heading.
@@ -28,7 +28,7 @@ A Kobo e-reader with NickelMenu installed is required.
 
 The current release package is built for 32-bit ARM Linux and has not been verified on other architectures. Before installation, it is recommended to back up `.kobo/KoboReader.sqlite`, any existing `.adds/nickelgram/config.json`, and your NickelMenu configuration.
 
-1. When v0.1.1 is published, use `NickelGram-0.1.1-kobo-arm.zip`. The latest published package can currently be downloaded from the [v0.1.0 Release](https://github.com/raenut/NickelGram/releases/tag/v0.1.0); that package does not include the v0.1.1 changes above.
+1. Download `NickelGram-0.1.1-kobo-arm.zip` from the [v0.1.1 Release](https://github.com/raenut/NickelGram/releases/tag/v0.1.1).
 
 2. Extract the archive and merge the included `.adds` directory into the root of the Kobo storage. Do not remove other existing contents inside `.adds`. The bundled `.adds/nm/nickelgram` adds three NickelMenu entries.
 
@@ -78,7 +78,7 @@ The filename consists of the book title and a short identifier derived from the 
 
 For local testing and repeatable test commands, see [Local Testing](docs/LOCAL_TEST.md).
 
-The v0.1.1 packaging script produces `NickelGram-0.1.1-source.zip`, the device package, and `SHA256SUMS`.
+The Release also includes the source archive `NickelGram-0.1.1-source.zip` and `SHA256SUMS`.
 
 ## Known Issues & Limitations
 
@@ -92,11 +92,11 @@ The v0.1.1 packaging script produces `NickelGram-0.1.1-source.zip`, the device p
 
   The three currently supported workflows are regular text selection sharing, sharing a saved highlight or annotation from the Reader menu, and exporting all highlights from a book.
 
-- **v0.1.0 on-device regression testing**: Local database queries, formatting logic, and the ARM build have been verified. However, the three complete menu workflows, actual Telegram delivery, and compatibility across different firmware versions still require further on-device verification for the [v0.1.0 Release](https://github.com/raenut/NickelGram/releases/tag/v0.1.0) package.
+- **v0.1.1 on-device regression testing**: Local database queries, formatting logic, and the ARM build have been verified. However, the three complete menu workflows, actual Telegram delivery, and compatibility across different firmware versions still require further on-device verification for the [v0.1.1 Release](https://github.com/raenut/NickelGram/releases/tag/v0.1.1) package.
 
 ## Risk Disclaimer
 
-NickelGram v0.1.0 is an early release and may still contain bugs. Possible issues include changes in Kobo database state, firmware or NickelMenu compatibility problems, network or Telegram delivery failures, incorrect book identification, and unexpected data loss during installation or use.
+NickelGram v0.1.1 is an early release and may still contain bugs. Possible issues include changes in Kobo database state, firmware or NickelMenu compatibility problems, network or Telegram delivery failures, incorrect book identification, and unexpected data loss during installation or use.
 
 Back up your device data and configuration before installation and decide whether the software is appropriate for your own use. This project is provided "as is" under the terms described in [LICENSE](LICENSE), without warranty of fitness for any particular purpose.
 
@@ -109,7 +109,7 @@ The author's current on-device test environment is limited to:
 - The latest firmware available for those devices at the time of testing
 - NickelMenu 0.6.0
 
-Other Kobo models, firmware versions, and NickelMenu versions have not yet been verified. The v0.1.0 Release package has also not yet completed full end-to-end regression testing on the devices listed above.
+Other Kobo models, firmware versions, and NickelMenu versions have not yet been verified. The v0.1.1 Release package has also not yet completed full end-to-end regression testing on the devices listed above.
 
 ## Third-party Components & Licenses
 
