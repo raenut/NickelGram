@@ -4,7 +4,7 @@
 
 # NickelGram
 
-[English](README.md) · [Latest Release](https://github.com/raenut/NickelGram/releases/latest)
+[English](README.md) · [下载 v0.1.2](https://github.com/raenut/NickelGram/releases/tag/v0.1.2)
 
 [![最新版本](https://img.shields.io/github/v/release/raenut/NickelGram?label=release&color=788c96)](https://github.com/raenut/NickelGram/releases/latest) [![许可证](https://img.shields.io/github/license/raenut/NickelGram?color=788c96)](LICENSE)
 
@@ -26,17 +26,13 @@ NickelGram 通过 [NickelMenu](https://github.com/pgaskin/NickelMenu) 为 Kobo �
 
 当前发布包适用于 32 位 ARM Linux Kobo 阅读器。
 
-## 快速使用
-
-### 1. 准备工作
+## 安装
 
 - 在 Kobo 阅读器上安装 NickelMenu。
 - 准备 Telegram Bot Token 和目标聊天的 Chat ID。
 - 备份 `.kobo/KoboReader.sqlite`、已有的 NickelGram 配置和 NickelMenu 配置。
 
-### 2. 正式安装
-
-1. 从 [Latest Release](https://github.com/raenut/NickelGram/releases/latest) 下载文件名以 `-kobo-arm.zip` 结尾的压缩包并解压。
+1. 从 [v0.1.2 发布页](https://github.com/raenut/NickelGram/releases/tag/v0.1.2) 下载 `NickelGram-0.1.2-kobo-arm.zip` 并解压。
 2. 将解压得到的 `.adds` 文件夹合并到 Kobo 存储根目录，保留设备上已有的其他文件。
 3. 将 `.adds/nickelgram/config.example.json` 复制为同目录下的 `config.json`。
 4. 参照下方配置表修改 `config.json`。
@@ -60,8 +56,13 @@ NickelGram 通过 [NickelMenu](https://github.com/pgaskin/NickelMenu) 为 Kobo �
 
 ## 使用限制
 
-- 直接选中多段文字时，Kobo/NickelMenu 传来的文本可能缺少段落分隔；此时 Telegram 消息可能没有原书的换行。已保存的高亮优先使用 Kobo 数据库中的完整文本。
-- 不同设备和固件的兼容性尚未全面验证。目前测试设备为 Kobo Libra Colour 和 Kobo Clara 2E。
+- 直接选中跨段文字时，Kobo/NickelMenu 传入的文本可能丢失换行，或在段首带入空格。缺失的分段无法可靠地从选区文本还原；匹配到已保存高亮时使用 Kobo 保存的全文。
+- Markdown 的章节名依赖 Kobo 目录和可读取的书籍文件。锚点无法匹配时，标题会退回文件名或“未知章节”。章节定位只读取相关书籍片段，不用于重建选区文本。
+- 已在 Kobo Libra Colour、Kobo Clara 2E 上测试部分流程；v0.1.2 最终包尚未完成整套实机复测，其他设备和固件尚未验证。
+
+## 版本
+
+[v0.1.2](https://github.com/raenut/NickelGram/tree/v0.1.2) · [v0.1.1](https://github.com/raenut/NickelGram/tree/v0.1.1) · [v0.1.0](https://github.com/raenut/NickelGram/tree/v0.1.0)
 
 开发与本地测试说明见[测试说明](docs/TESTING.md)。
 
