@@ -19,7 +19,7 @@ func highlightMessage(book RecentBook, mark Highlight, footer string) string {
 	if strings.TrimSpace(book.Author) != "" {
 		heading += ", " + book.Author
 	}
-	blocks := []string{heading, "❝\n" + mark.Text}
+	blocks := []string{heading, "❝\n" + normalizeSelectionParagraphs(mark.Text)}
 	if strings.TrimSpace(mark.Annotation) != "" {
 		blocks = append(blocks, "批注：\n"+mark.Annotation)
 	}

@@ -217,10 +217,11 @@ func runAction(root, selection string) error {
 	if err != nil {
 		return err
 	}
-	if full := readMatchingBookmarkText(binary, lib, koboDB, book, selection); full != "" {
-		selection = full
+	message := selectionMessage(book, selection, c.Footer)
+	if mark := readMatchingBookmark(binary, lib, koboDB, book, selection); mark.Text != "" {
+		message = highlightMessage(book, mark, c.Footer)
 	}
-	outcome := tg.SendMessage(c, selectionMessage(book, selection, c.Footer))
+	outcome := tg.SendMessage(c, message)
 	if !outcome.OK {
 		return errors.New(outcome.Message)
 	}

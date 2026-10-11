@@ -3,7 +3,7 @@ import hashlib, json, os, re, shutil, struct, subprocess, zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = '0.1.1'
+VERSION = '0.1.2'
 GO_VERSION = 'go1.26.8'
 TOKEN_PATTERN = re.compile(rb'(?<![A-Za-z0-9])\d{6,}:[A-Za-z0-9_-]{20,}(?![A-Za-z0-9])')
 PRIVATE_ID_PATTERN = re.compile(rb'"(?:telegram_)?(?:chat_id|channel_id|username)"\s*:\s*"(?:-?[0-9]{4,}|@[A-Za-z0-9_]+)"')

@@ -173,10 +173,11 @@ func runDebug(args []string) error {
 			return err
 		}
 		printTextDebug("RAW_INPUT", selection)
-		if full := readMatchingBookmarkText(binary, "", db, book, selection); full != "" {
-			selection = full
-		}
 		message := selectionMessage(book, selection, footer)
+		if mark := readMatchingBookmark(binary, "", db, book, selection); mark.Text != "" {
+			selection = mark.Text
+			message = highlightMessage(book, mark, footer)
+		}
 		path := filepath.Join(outDir, "selection-message.txt")
 		if err := os.WriteFile(path, []byte(message), 0600); err != nil {
 			return err

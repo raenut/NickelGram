@@ -60,7 +60,7 @@ NickelGram 通过 [NickelMenu](https://github.com/pgaskin/NickelMenu) 为 Kobo �
 
 ## 使用限制
 
-- 部分选区或刚切换书籍后的分享结果可能不准确。
+- 直接选中多段文字时，Kobo/NickelMenu 传来的文本可能缺少段落分隔；此时 Telegram 消息可能没有原书的换行。已保存的高亮优先使用 Kobo 数据库中的完整文本。
 - 不同设备和固件的兼容性尚未全面验证。目前测试设备为 Kobo Libra Colour 和 Kobo Clara 2E。
 
 开发与本地测试说明见[测试说明](docs/TESTING.md)。

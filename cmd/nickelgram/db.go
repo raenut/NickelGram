@@ -29,6 +29,7 @@ type Highlight struct {
 	Annotation string `json:"annotation"`
 	Chapter    string `json:"chapter"`
 	ChapterID  string `json:"chapter_id"`
+	StartPath  string `json:"start_path"`
 	Modified   string `json:"modified"`
 }
 
@@ -51,33 +52,33 @@ const recentBookSQL = `SELECT hex(ContentID) AS volume,
  ORDER BY DateLastRead DESC, rowid DESC
  LIMIT 1;`
 
-// A newly created highlight can identify its book before DateLastRead advances.
-// If no visible bookmark is newer than the last read timestamp, retain the
-// existing DateLastRead behavior.
-const currentBookSQL = `SELECT hex(c.ContentID) AS volume,
+// DateLastRead can lag behind opening a book. Event 1020 is Kobo's OpenContent
+// event; only use it while it is newer than the latest LeaveContent event (1021).
+// A saved bookmark and DateLastRead remain fallbacks when no book is open.
+const currentBookSQL = `WITH latest_navigation AS (
+ SELECT EventType, ContentID, julianday(LastOccurrence) AS happened
+ FROM Event WHERE EventType IN (1020,1021)
+ ORDER BY happened DESC LIMIT 1
+), candidates AS (
+ SELECT ContentID AS volume, happened, 3 AS priority
+ FROM latest_navigation WHERE EventType=1020
+ UNION ALL
+ SELECT VolumeID,
+   julianday(CASE WHEN COALESCE(DateModified,'') > COALESCE(DateCreated,'')
+                   THEN DateModified ELSE DateCreated END), 2
+ FROM Bookmark WHERE ` + visibleHighlightCondition + `
+ UNION ALL
+ SELECT ContentID, julianday(DateLastRead), 1
+ FROM content WHERE CAST(ContentType AS TEXT)='6'
+)
+SELECT hex(c.ContentID) AS volume,
  hex(COALESCE(c.Title,'')) AS title,
  hex(COALESCE(c.Attribution,'')) AS author
- FROM content c
- WHERE c.ContentID = COALESCE(
-   (SELECT b.VolumeID FROM Bookmark b
-    INNER JOIN content bc ON bc.ContentID=b.VolumeID AND CAST(bc.ContentType AS TEXT)='6'
-    WHERE b.Type IN ('highlight','note')
-      AND length(trim(COALESCE(b.Text,'')))>0
-      AND lower(COALESCE(CAST(b.Hidden AS TEXT),'false')) NOT IN ('1','true')
-      AND julianday(CASE WHEN COALESCE(b.DateModified,'') > COALESCE(b.DateCreated,'')
-                         THEN b.DateModified ELSE b.DateCreated END) >
-          COALESCE((SELECT max(julianday(DateLastRead)) FROM content
-                    WHERE CAST(ContentType AS TEXT)='6'), 0)
-    ORDER BY julianday(CASE WHEN COALESCE(b.DateModified,'') > COALESCE(b.DateCreated,'')
-                            THEN b.DateModified ELSE b.DateCreated END) DESC,
-             b.BookmarkID DESC
-    LIMIT 1),
-   (SELECT ContentID FROM content
-    WHERE CAST(ContentType AS TEXT)='6'
-      AND DateLastRead IS NOT NULL
-      AND length(trim(CAST(DateLastRead AS TEXT)))>0
-    ORDER BY DateLastRead DESC, rowid DESC LIMIT 1))
- LIMIT 1;`
+FROM candidates candidate
+JOIN content c ON c.ContentID=candidate.volume AND CAST(c.ContentType AS TEXT)='6'
+WHERE candidate.happened IS NOT NULL
+ORDER BY candidate.happened DESC, candidate.priority DESC
+LIMIT 1;`
 
 func sqliteQuery(binary, lib, db, query string) ([]byte, error) {
 	limit := 1500 * time.Millisecond
@@ -200,10 +201,11 @@ func readBookHighlights(binary, lib, db string, book RecentBook) ([]Highlight, e
 	query := `SELECT hex(b.Text) AS text,
 	 hex(COALESCE(b.Annotation,'')) AS annotation,
 	 hex(COALESCE(chapter.Title,'')) AS chapter,
-	 hex(b.ContentID) AS chapter_id
+	 hex(b.ContentID) AS chapter_id,
+	 hex(COALESCE(b.StartContainerPath,'')) AS start_path
 	 FROM Bookmark b
 	 LEFT JOIN content chapter ON chapter.ContentID=b.ContentID
-	   AND chapter.BookID=b.VolumeID AND CAST(chapter.ContentType AS TEXT)='9'
+	   AND chapter.BookID=b.VolumeID AND CAST(chapter.ContentType AS TEXT) IN ('9','899')
 	 WHERE hex(b.VolumeID)='` + volumeHex + `'
 	   AND b.Type IN ('highlight','note')
 	   AND length(trim(COALESCE(b.Text,'')))>0
@@ -231,7 +233,11 @@ func readBookHighlights(binary, lib, db string, book RecentBook) ([]Highlight, e
 		if rows[i].ChapterID, err = decodeHexField(rows[i].ChapterID); err != nil {
 			return nil, err
 		}
+		if rows[i].StartPath, err = decodeHexField(rows[i].StartPath); err != nil {
+			return nil, err
+		}
 	}
+	resolveChapterTitles(binary, lib, db, book, rows)
 	return rows, nil
 }
 
@@ -253,37 +259,43 @@ func sentenceBoundaryPrefix(full, selected string) bool {
 	return strings.ContainsRune("。.!?！？", last) || strings.ContainsRune("。.!?！？", next)
 }
 
-func readMatchingBookmarkText(binary, lib, db string, book RecentBook, selection string) string {
+func readMatchingBookmark(binary, lib, db string, book RecentBook, selection string) Highlight {
 	volumeHex := strings.ToUpper(hex.EncodeToString([]byte(book.Volume)))
-	query := `SELECT hex(Text) AS text FROM Bookmark
+	query := `SELECT hex(Text) AS text, hex(COALESCE(Annotation,'')) AS annotation FROM Bookmark
  WHERE VolumeID=CAST(X'` + volumeHex + `' AS TEXT)
    AND Type IN ('highlight','note')
    AND length(trim(COALESCE(Text,'')))>0
    AND lower(COALESCE(CAST(Hidden AS TEXT),'false')) NOT IN ('1','true');`
 	out, err := sqliteQuery(binary, lib, db, query)
 	if err != nil {
-		return ""
+		return Highlight{}
 	}
-	var rows []struct {
-		Text string `json:"text"`
-	}
+	var rows []Highlight
 	if json.Unmarshal(out, &rows) != nil {
-		return ""
+		return Highlight{}
 	}
 	key := bookmarkMatchKey(selection)
-	match, count := "", 0
+	match, count := Highlight{}, 0
 	for _, row := range rows {
 		full, err := decodeHexField(row.Text)
 		if err != nil {
-			return ""
+			return Highlight{}
 		}
 		fullKey := bookmarkMatchKey(full)
 		if fullKey == key || sentenceBoundaryPrefix(fullKey, key) {
-			match, count = full, count+1
+			annotation, err := decodeHexField(row.Annotation)
+			if err != nil {
+				return Highlight{}
+			}
+			match, count = Highlight{Text: full, Annotation: annotation}, count+1
 		}
 	}
 	if count != 1 {
-		return ""
+		return Highlight{}
 	}
 	return match
+}
+
+func readMatchingBookmarkText(binary, lib, db string, book RecentBook, selection string) string {
+	return readMatchingBookmark(binary, lib, db, book, selection).Text
 }

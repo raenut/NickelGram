@@ -60,7 +60,7 @@ Keep `config.json` private because it contains your Bot Token and Chat ID.
 
 ## Limitations
 
-- Some selections or shares made immediately after switching books may be inaccurate.
+- When selecting multiple paragraphs directly, Kobo/NickelMenu may provide text without paragraph breaks. The Telegram message may then lose the book's line breaks. Saved highlights use the full text stored in Kobo's database when available.
 - Compatibility across devices and firmware versions has not been fully verified.
 - Testing so far has covered Kobo Libra Colour and Kobo Clara 2E.
 

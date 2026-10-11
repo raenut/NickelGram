@@ -47,7 +47,9 @@ func TestSelectionNewlinesSurviveShellAndTelegramJSON(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	var payload struct{ Text string `json:"text"` }
+	var payload struct {
+		Text string `json:"text"`
+	}
 	if err := json.Unmarshal(body, &payload); err != nil || payload.Text != want {
 		t.Fatalf("Telegram JSON text = %q, err = %v", payload.Text, err)
 	}
@@ -55,9 +57,9 @@ func TestSelectionNewlinesSurviveShellAndTelegramJSON(t *testing.T) {
 
 func TestReopenedHighlightUsesCompleteBookmarkText(t *testing.T) {
 	db := filepath.Join(t.TempDir(), "KoboReader.sqlite")
-	schema := `CREATE TABLE Bookmark(VolumeID TEXT, Type TEXT, Text TEXT, Hidden BOOL);
-INSERT INTO Bookmark VALUES('book-1','highlight','这是第一句足够长的内容。' || char(10) || char(10) || '这是完整高亮的第二句。',0);
-INSERT INTO Bookmark VALUES('book-2','highlight','这是第一句足够长的内容。别的书。',0);`
+	schema := `CREATE TABLE Bookmark(VolumeID TEXT, Type TEXT, Text TEXT, Annotation TEXT, Hidden BOOL);
+INSERT INTO Bookmark VALUES('book-1','highlight','这是第一句足够长的内容。' || char(10) || char(10) || '这是完整高亮的第二句。','我的批注',0);
+INSERT INTO Bookmark VALUES('book-2','highlight','这是第一句足够长的内容。别的书。','',0);`
 	if out, err := exec.Command("/usr/bin/sqlite3", db, schema).CombinedOutput(); err != nil {
 		t.Fatalf("fixture: %v: %s", err, out)
 	}
@@ -67,6 +69,10 @@ INSERT INTO Bookmark VALUES('book-2','highlight','这是第一句足够长的内
 		if got := readMatchingBookmarkText("/usr/bin/sqlite3", "", db, book, selected); got != want {
 			t.Fatalf("selection %q matched %q", selected, got)
 		}
+		mark := readMatchingBookmark("/usr/bin/sqlite3", "", db, book, selected)
+		if mark.Annotation != "我的批注" || !strings.Contains(highlightMessage(book, mark, ""), "批注：\n我的批注") {
+			t.Fatalf("selection %q lost annotation: %+v", selected, mark)
+		}
 	}
 	if got := selectionMessage(book, want, "footer"); !strings.Contains(got, "内容。\n\n这是完整") {
 		t.Fatalf("complete message lost second sentence: %q", got)
@@ -74,7 +80,7 @@ INSERT INTO Bookmark VALUES('book-2','highlight','这是第一句足够长的内
 	if got := readMatchingBookmarkText("/usr/bin/sqlite3", "", db, book, "无关选区。"); got != "" {
 		t.Fatalf("unrelated selection matched %q", got)
 	}
-	if out, err := exec.Command("/usr/bin/sqlite3", db, `INSERT INTO Bookmark VALUES('book-1','highlight','这是第一句足够长的内容。另一种后文。',0);`).CombinedOutput(); err != nil {
+	if out, err := exec.Command("/usr/bin/sqlite3", db, `INSERT INTO Bookmark VALUES('book-1','highlight','这是第一句足够长的内容。另一种后文。','',0);`).CombinedOutput(); err != nil {
 		t.Fatalf("fixture: %v: %s", err, out)
 	}
 	if got := readMatchingBookmarkText("/usr/bin/sqlite3", "", db, book, "这是第一句足够长的内容。"); got != "" {

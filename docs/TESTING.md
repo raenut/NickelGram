@@ -34,7 +34,7 @@ local-test/
 ./test.sh export-md '<list-books 输出的书籍标识>'
 ```
 
-`latest-highlight` 和 `export-md` 的书籍标识也可填 `current`。`./test.sh current-book` 显示正式代码当前推断的书籍。`render-message` 写入 `output/message.txt`；`export-md` 写入带书名与短标识的 `.md`。v0.1.1 的 `export-md` 预览按书中位置排序，包含章节标题和不带时区的 `exported_at`。电脑端预览仍保存在 `local-test/output/`；Kobo 上的正式导出保存到磁盘根目录的 `Highlights/`。
+`latest-highlight` 和 `export-md` 的书籍标识也可填 `current`。`./test.sh current-book` 显示正式代码当前推断的书籍。程序会结合 Kobo 的打开书籍事件、已保存的高亮和最近阅读时间判断当前书。`render-message` 写入 `output/message.txt`；`export-md` 写入带书名与短标识的 `.md`。`export-md` 预览按书中位置排序，包含章节标题和不带时区的 `exported_at`。电脑端预览仍保存在 `local-test/output/`；Kobo 上的正式导出保存到磁盘根目录的 `Highlights/`。
 
 排查跨段换行可运行：
 
@@ -50,4 +50,4 @@ local-test/
 
 本地可检查这份快照的 SQLite schema、书名、作者、Text、Annotation、时间、footer、普通消息、Markdown 和文件名。快照中的内容与设备实时状态可能不同；是否有多段高亮取决于你提供的数据库样本。
 
-本地不能确认 NickelMenu `{1}` 实际传入的文本、selection UI 的行为、新书刚打开时 Bookmark 何时写入、Reader 菜单触发状态、Kobo ARM 环境和 Telegram 实际发送。这些需要最后的实机验证。尚未保存高亮的纯选区仍可能因 `DateLastRead` 滞后而得到上一书的元数据。
+本地不能确认 NickelMenu `{1}` 实际传入的文本、selection UI 的行为、打开书籍事件及 Bookmark 何时写入、Reader 菜单触发状态、Kobo ARM 环境和 Telegram 实际发送。这些需要最后的实机验证。如果选区输入本身没有段落分隔，程序无法从纯文本推断原书的段落位置。未写入 Kobo 数据库的批注也无法通过只读查询发送。

@@ -85,7 +85,7 @@ func bookMarkdown(book RecentBook, marks []Highlight, footer string, tags []stri
 		}
 		lines := strings.Split(strings.ReplaceAll(strings.TrimSpace(mark.Text), "\r\n", "\n"), "\n")
 		for _, line := range lines {
-			out.WriteString("> " + line + "\n")
+			out.WriteString("> " + strings.TrimLeftFunc(line, unicode.IsSpace) + "\n")
 		}
 		if note := strings.TrimSpace(mark.Annotation); note != "" {
 			out.WriteString("\n批注：\n" + note + "\n")
