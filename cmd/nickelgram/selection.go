@@ -7,12 +7,18 @@ import (
 	"unicode/utf8"
 )
 
-var blankLines = regexp.MustCompile(`\n{2,}`)
+var indentationSpaces = regexp.MustCompile(`[ \t\x{00a0}\x{1680}\x{2000}-\x{200a}\x{202f}\x{205f}\x{3000}]+`)
+var newlineRun = regexp.MustCompile(`\n+`)
 
 func normalizeSelectionParagraphs(text string) string {
-	text = strings.ReplaceAll(text, "\r\n", "\n")
-	text = strings.NewReplacer("\r", "\n", "\u2028", "\n", "\u2029", "\n\n").Replace(text)
-	return blankLines.ReplaceAllString(text, "\n\n")
+	text = strings.NewReplacer("\r\n", "\n", "\r", "\n", "\u2028", "\n", "\u2029", "\n").Replace(text)
+	text = indentationSpaces.ReplaceAllStringFunc(text, func(spaces string) string {
+		if spaces == " " {
+			return spaces
+		}
+		return "\n"
+	})
+	return newlineRun.ReplaceAllString(text, "\n")
 }
 
 func validateSelection(text string) (string, error) {

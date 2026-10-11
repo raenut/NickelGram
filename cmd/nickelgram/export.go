@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"path"
 	"path/filepath"
 	"strings"
 	"time"
@@ -41,13 +40,10 @@ func yamlString(value string) string {
 
 func chapterHeading(title string) string {
 	title = strings.TrimSpace(strings.NewReplacer("\r", " ", "\n", " ").Replace(title))
-	if title == "" {
-		return "未知章节"
-	}
-	cleanPath := strings.ReplaceAll(title, "\\", "/")
-	lower := strings.ToLower(cleanPath)
-	if strings.HasSuffix(lower, ".html") || strings.HasSuffix(lower, ".htm") || strings.HasSuffix(lower, ".xhtml") {
-		return path.Base(cleanPath)
+	lower := strings.ToLower(title)
+	if title == "" || title == "(无标题)" || title == "无标题" ||
+		strings.HasSuffix(lower, ".html") || strings.HasSuffix(lower, ".htm") || strings.HasSuffix(lower, ".xhtml") {
+		return "Untitled Chapter"
 	}
 	return title
 }
@@ -83,7 +79,7 @@ func bookMarkdown(book RecentBook, marks []Highlight, footer string, tags []stri
 			previousChapterID = mark.ChapterID
 			firstMark = false
 		}
-		lines := strings.Split(strings.ReplaceAll(strings.TrimSpace(mark.Text), "\r\n", "\n"), "\n")
+		lines := strings.Split(strings.ReplaceAll(normalizeSelectionParagraphs(mark.Text), "\r\n", "\n"), "\n")
 		for _, line := range lines {
 			out.WriteString("> " + strings.TrimLeftFunc(line, unicode.IsSpace) + "\n")
 		}

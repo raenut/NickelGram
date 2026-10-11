@@ -4,7 +4,7 @@
 
 # NickelGram
 
-[English](README.md) · [下载 v0.1.2](https://github.com/raenut/NickelGram/releases/tag/v0.1.2)
+[English](README.md) · [下载 v0.1.3](https://github.com/raenut/NickelGram/releases/tag/v0.1.3)
 
 [![最新版本](https://img.shields.io/github/v/release/raenut/NickelGram?label=release&color=788c96)](https://github.com/raenut/NickelGram/releases/latest) [![许可证](https://img.shields.io/github/license/raenut/NickelGram?color=788c96)](LICENSE)
 
@@ -32,7 +32,7 @@ NickelGram 通过 [NickelMenu](https://github.com/pgaskin/NickelMenu) 为 Kobo �
 - 准备 Telegram Bot Token 和目标聊天的 Chat ID。
 - 备份 `.kobo/KoboReader.sqlite`、已有的 NickelGram 配置和 NickelMenu 配置。
 
-1. 从 [v0.1.2 发布页](https://github.com/raenut/NickelGram/releases/tag/v0.1.2) 下载 `NickelGram-0.1.2-kobo-arm.zip` 并解压。
+1. 从 [v0.1.3 发布页](https://github.com/raenut/NickelGram/releases/tag/v0.1.3) 下载 `NickelGram-0.1.3-kobo-arm.zip` 并解压。
 2. 将解压得到的 `.adds` 文件夹合并到 Kobo 存储根目录，保留设备上已有的其他文件。
 3. 将 `.adds/nickelgram/config.example.json` 复制为同目录下的 `config.json`。
 4. 参照下方配置表修改 `config.json`。
@@ -56,13 +56,13 @@ NickelGram 通过 [NickelMenu](https://github.com/pgaskin/NickelMenu) 为 Kobo �
 
 ## 使用限制
 
-- 直接选中跨段文字时，Kobo/NickelMenu 传入的文本可能丢失换行，或在段首带入空格。缺失的分段无法可靠地从选区文本还原；匹配到已保存高亮时使用 Kobo 保存的全文。
-- Markdown 的章节名依赖 Kobo 目录和可读取的书籍文件。锚点无法匹配时，标题会退回文件名或“未知章节”。章节定位只读取相关书籍片段，不用于重建选区文本。
-- 已在 Kobo Libra Colour、Kobo Clara 2E 上测试部分流程；v0.1.2 最终包尚未完成整套实机复测，其他设备和固件尚未验证。
+- 直接选中跨段文字时，Kobo/NickelMenu 传入的文本可能丢失换行。需要保留段落时先保存划线；NickelGram 会使用 Kobo 保存的全文，并把段首缩进转换为单个换行。
+- Markdown 的章节名优先使用 Kobo 目录中的章内标题，其次使用书籍片段的目录标题；仍无法确定时显示 “Untitled Chapter”，不会显示 XHTML/HTML 文件名。章节定位只读取相关书籍片段，不用于重建选区文本。
+- 已在 Kobo Libra Colour、Kobo Clara 2E 上测试；其他设备和固件尚未验证。
 
 ## 版本
 
-[v0.1.2](https://github.com/raenut/NickelGram/tree/v0.1.2) · [v0.1.1](https://github.com/raenut/NickelGram/tree/v0.1.1) · [v0.1.0](https://github.com/raenut/NickelGram/tree/v0.1.0)
+[v0.1.3](https://github.com/raenut/NickelGram/tree/v0.1.3) · [v0.1.2](https://github.com/raenut/NickelGram/tree/v0.1.2) · [v0.1.1](https://github.com/raenut/NickelGram/tree/v0.1.1) · [v0.1.0](https://github.com/raenut/NickelGram/tree/v0.1.0)
 
 开发与本地测试说明见[测试说明](docs/TESTING.md)。
 

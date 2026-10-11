@@ -37,6 +37,24 @@ func resolveChapterTitles(binary, lib, db string, book RecentBook, marks []Highl
 			toc = append(toc, tocEntry{ID: id, Title: title})
 		}
 	}
+	// Kobo also stores a TOC title for an entire XHTML member. Use it as the
+	// chapter heading until a more specific anchor can be located below.
+	members := make([]string, len(marks))
+	for i := range marks {
+		base, rest, ok := strings.Cut(marks[i].ChapterID, "!!")
+		if !ok || base != book.Volume {
+			continue
+		}
+		member := strings.SplitN(rest, "#", 2)[0]
+		members[i] = member
+		for _, entry := range toc {
+			if entry.ID == book.Volume+"!!"+member+"-1" || entry.ID == book.Volume+"!!"+member {
+				marks[i].Chapter = entry.Title
+				marks[i].ChapterID = entry.ID
+				break
+			}
+		}
+	}
 	archive, err := zip.OpenReader(filepath.Join(filepath.Dir(dbPath), "kepub", book.Volume))
 	if err != nil {
 		return
@@ -52,7 +70,7 @@ func resolveChapterTitles(binary, lib, db string, book RecentBook, marks []Highl
 		if !ok || base != book.Volume {
 			continue
 		}
-		member := strings.SplitN(strings.SplitN(marks[i].ChapterID, "!!", 2)[1], "#", 2)[0]
+		member := members[i]
 		fragment := strings.ReplaceAll(marks[i].StartPath, `\.`, ".")
 		if n := strings.LastIndexByte(fragment, '#'); n >= 0 {
 			fragment = fragment[n+1:]

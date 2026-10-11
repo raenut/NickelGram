@@ -22,11 +22,11 @@ func TestSelectionParagraphSeparators(t *testing.T) {
 	for _, tc := range []struct{ input, want string }{
 		{"单段原文", "单段原文"},
 		{"段内\n换行", "段内\n换行"},
-		{"第一段\n\n第二段", "第一段\n\n第二段"},
-		{"第一段\r\n\r\n第二段", "第一段\n\n第二段"},
+		{"第一段\n\n第二段", "第一段\n第二段"},
+		{"第一段\r\n\r\n第二段", "第一段\n第二段"},
 		{"第一段\r第二段", "第一段\n第二段"},
 		{"第一段\u2028第二段", "第一段\n第二段"},
-		{"第一段\u2029第二段", "第一段\n\n第二段"},
+		{"第一段\u2029第二段", "第一段\n第二段"},
 	} {
 		got := selectionMessage(book, tc.input, "")
 		if want := "书名\n\n❝\n" + tc.want; got != want {
@@ -74,7 +74,7 @@ INSERT INTO Bookmark VALUES('book-2','highlight','这是第一句足够长的内
 			t.Fatalf("selection %q lost annotation: %+v", selected, mark)
 		}
 	}
-	if got := selectionMessage(book, want, "footer"); !strings.Contains(got, "内容。\n\n这是完整") {
+	if got := selectionMessage(book, want, "footer"); !strings.Contains(got, "内容。\n这是完整") {
 		t.Fatalf("complete message lost second sentence: %q", got)
 	}
 	if got := readMatchingBookmarkText("/usr/bin/sqlite3", "", db, book, "无关选区。"); got != "" {
@@ -108,5 +108,17 @@ INSERT INTO Bookmark(VolumeID,Type,Text,Annotation,DateCreated,DateModified,Hidd
 	}
 	if got := highlightMessage(book, mark, "footer"); got != "书名, 作者\n\n❝\nolder creation\n\n批注：\nwritten later\n\nfooter" {
 		t.Fatalf("message: %q", got)
+	}
+}
+
+func TestIndentationBecomesParagraphBreak(t *testing.T) {
+	for _, input := range []string{"甲  乙", "甲\t乙", "甲　　乙", "甲\u00a0乙"} {
+		if got := normalizeSelectionParagraphs(input); got != "甲\n乙" {
+			t.Errorf("%q became %q", input, got)
+		}
+	}
+	input := "English words\n\n\n原有换行"
+	if got := normalizeSelectionParagraphs(input); got != "English words\n原有换行" {
+		t.Errorf("existing spacing changed: %q", got)
 	}
 }

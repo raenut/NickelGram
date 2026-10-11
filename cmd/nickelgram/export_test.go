@@ -41,7 +41,7 @@ func TestBookExportQueryAndMarkdown(t *testing.T) {
 		t.Fatalf("marks: %+v", marks)
 	}
 	exportedAt := time.Date(2026, 10, 6, 22, 2, 45, 0, time.FixedZone("test", 8*3600))
-	want := "---\ntitle: \"A/B: Book\"\nauthor: \"作者\"\nsource: kobo\nexported_at: \"2026-10-06 22:02:45\"\ntags:\n  - \"kobo\"\n---\n\n<hr>\n\n## part0043.xhtml\n\n> first\n> line\n\n批注：\nmy note\n\n<hr>\n\n> later\n\n<hr>\n\n## 第二章\n\n> second chapter\n\n<hr>\n\n## 八\n\n> eighth chapter\n\n<hr>\n\n## 未知章节\n\n> orphan\n\n<hr>\n\n*footer*\n"
+	want := "---\ntitle: \"A/B: Book\"\nauthor: \"作者\"\nsource: kobo\nexported_at: \"2026-10-06 22:02:45\"\ntags:\n  - \"kobo\"\n---\n\n<hr>\n\n## Untitled Chapter\n\n> first\n> line\n\n批注：\nmy note\n\n<hr>\n\n> later\n\n<hr>\n\n## 第二章\n\n> second chapter\n\n<hr>\n\n## 八\n\n> eighth chapter\n\n<hr>\n\n## Untitled Chapter\n\n> orphan\n\n<hr>\n\n*footer*\n"
 	if got := bookMarkdown(book, marks, "*footer*", []string{"kobo"}, exportedAt); got != want {
 		t.Fatalf("markdown = %q, want %q", got, want)
 	}

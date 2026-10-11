@@ -4,7 +4,7 @@
 
 # NickelGram
 
-[简体中文](README.zh-CN.md) · [Download v0.1.2](https://github.com/raenut/NickelGram/releases/tag/v0.1.2)
+[简体中文](README.zh-CN.md) · [Download v0.1.3](https://github.com/raenut/NickelGram/releases/tag/v0.1.3)
 
 [![Latest Release](https://img.shields.io/github/v/release/raenut/NickelGram?label=release&color=788c96)](https://github.com/raenut/NickelGram/releases/latest) [![License](https://img.shields.io/github/license/raenut/NickelGram?color=788c96)](LICENSE)
 
@@ -32,7 +32,7 @@ The current release package targets 32-bit ARM Linux Kobo readers.
 - Prepare a Telegram Bot Token and the target chat's Chat ID.
 - Back up `.kobo/KoboReader.sqlite`, any existing NickelGram / NickelMenu configuration.
 
-1. Download `NickelGram-0.1.2-kobo-arm.zip` from the [v0.1.2 release](https://github.com/raenut/NickelGram/releases/tag/v0.1.2) and extract it.
+1. Download `NickelGram-0.1.3-kobo-arm.zip` from the [v0.1.3 release](https://github.com/raenut/NickelGram/releases/tag/v0.1.3) and extract it.
 2. Merge the extracted `.adds` folder into the root of Kobo storage, keeping your other existing files.
 3. Copy `.adds/nickelgram/config.example.json` to `config.json` in the same folder.
 4. Edit `config.json` using the configuration table below.
@@ -56,13 +56,13 @@ Keep `config.json` private because it contains your Bot Token and Chat ID.
 
 ## Limitations
 
-- Direct selections spanning paragraphs can lose paragraph breaks or carry a leading space from Kobo/NickelMenu. NickelGram cannot reliably reconstruct breaks absent from the selected text. Saved highlights use Kobo's stored text when matched.
-- Chapter names in Markdown depend on Kobo's table of contents and the book file being readable. If an anchor cannot be matched, the heading falls back to a file name or “未知章节”. Chapter resolution reads the relevant book section; it does not reconstruct selected text.
-- Tested on Kobo Libra Colour and Kobo Clara 2E. The final v0.1.2 package has not had a complete device retest; other devices and firmware versions remain unverified.
+- Direct selections spanning paragraphs can lose paragraph breaks. Save the highlight when paragraph breaks matter; NickelGram then uses Kobo's stored text and converts indentation to single line breaks.
+- Chapter names in Markdown prefer Kobo's anchored table-of-contents title, then the title for the whole book section. If neither is available, the heading is “Untitled Chapter”; XHTML/HTML filenames are not shown. Chapter resolution reads the relevant book section; it does not reconstruct selected text.
+- Tested on Kobo Libra Colour and Kobo Clara 2E; other devices and firmware versions remain unverified.
 
 ## Versions
 
-[v0.1.2](https://github.com/raenut/NickelGram/tree/v0.1.2) · [v0.1.1](https://github.com/raenut/NickelGram/tree/v0.1.1) · [v0.1.0](https://github.com/raenut/NickelGram/tree/v0.1.0)
+[v0.1.3](https://github.com/raenut/NickelGram/tree/v0.1.3) · [v0.1.2](https://github.com/raenut/NickelGram/tree/v0.1.2) · [v0.1.1](https://github.com/raenut/NickelGram/tree/v0.1.1) · [v0.1.0](https://github.com/raenut/NickelGram/tree/v0.1.0)
 
 See [Testing](docs/TESTING.md) for development and testing.
 

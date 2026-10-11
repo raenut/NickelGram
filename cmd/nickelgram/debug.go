@@ -175,7 +175,7 @@ func runDebug(args []string) error {
 		printTextDebug("RAW_INPUT", selection)
 		message := selectionMessage(book, selection, footer)
 		if mark := readMatchingBookmark(binary, "", db, book, selection); mark.Text != "" {
-			selection = mark.Text
+		selection = mark.Text
 			message = highlightMessage(book, mark, footer)
 		}
 		path := filepath.Join(outDir, "selection-message.txt")
