@@ -4,7 +4,7 @@
 
 # NickelGram
 
-[简体中文](README.zh-CN.md) · [Download v0.1.2](https://github.com/raenut/NickelGram/releases/tag/v0.1.2)
+[简体中文](README.zh-CN.md) · [Latest Release](https://github.com/raenut/NickelGram/releases/tag/v0.1.2)
 
 [![Latest Release](https://img.shields.io/github/v/release/raenut/NickelGram?label=release&color=788c96)](https://github.com/raenut/NickelGram/releases/latest) [![License](https://img.shields.io/github/license/raenut/NickelGram?color=788c96)](LICENSE)
 
@@ -57,12 +57,8 @@ Keep `config.json` private because it contains your Bot Token and Chat ID.
 ## Limitations
 
 - Direct selections spanning paragraphs can lose paragraph breaks or carry a leading space from Kobo/NickelMenu. NickelGram cannot reliably reconstruct breaks absent from the selected text. Saved highlights use Kobo's stored text when matched.
-- Chapter names in Markdown depend on Kobo's table of contents and the book file being readable. If an anchor cannot be matched, the heading falls back to a file name or “未知章节”. Chapter resolution reads the relevant book section; it does not reconstruct selected text.
+- Chapter names in Markdown depend on Kobo's table of contents and the book file being readable. If an anchor cannot be matched, the heading falls back to a file name or “Unknown Chapter”. Chapter resolution reads the relevant book section; it does not reconstruct selected text.
 - Tested on Kobo Libra Colour and Kobo Clara 2E. The final v0.1.2 package has not had a complete device retest; other devices and firmware versions remain unverified.
-
-## Versions
-
-[v0.1.2](https://github.com/raenut/NickelGram/tree/v0.1.2) · [v0.1.1](https://github.com/raenut/NickelGram/tree/v0.1.1) · [v0.1.0](https://github.com/raenut/NickelGram/tree/v0.1.0)
 
 See [Testing](docs/TESTING.md) for development and testing.
 
