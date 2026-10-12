@@ -4,76 +4,86 @@
 
 # NickelGram
 
-[简体中文](README.zh-CN.md) · [Download v0.1.3](https://github.com/raenut/NickelGram/releases/tag/v0.1.3)
+[简体中文](README.zh-CN.md) ·
+[Download v0.1.4](https://github.com/raenut/NickelGram/releases/tag/v0.1.4)
 
-[![Latest Release](https://img.shields.io/github/v/release/raenut/NickelGram?label=release&color=788c96)](https://github.com/raenut/NickelGram/releases/latest) [![License](https://img.shields.io/github/license/raenut/NickelGram?color=788c96)](LICENSE)
+NickelGram adds Telegram sharing to Kobo readers through
+[NickelMenu](https://github.com/pgaskin/NickelMenu).
 
-NickelGram adds Telegram sharing to Kobo e-readers through [NickelMenu](https://github.com/pgaskin/NickelMenu).
-
-Send selected text or the latest highlight, or export a book's highlights and annotations as a Markdown file.
+Send selected text or the latest highlight. Export a book's highlights and
+annotations as Markdown.
 
 ## Features
 
 | Where | Menu entry | Result |
 | --- | --- | --- |
-| Selection | Send&nbsp;to&nbsp;Telegram | Sends selected text with the book title and author |
-| Reader | Send&nbsp;Latest&nbsp;Highlight | Sends the latest highlight or annotation |
-| Reader | Export&nbsp;All&nbsp;Highlights | Exports and sends all highlights and annotations as Markdown |
+| Selection | Send&nbsp;to&nbsp;Telegram | Send selected text with book details |
+| Reader | Send&nbsp;Latest&nbsp;Highlight | Send the latest highlight or annotation |
+| Reader | Export&nbsp;All&nbsp;Highlights | Export and send all highlights as Markdown |
 
-Exported files are saved in `Highlights/` at the root of Kobo storage.
-
-## Supported Devices
-
-The current release package targets 32-bit ARM Linux Kobo readers.
+Markdown files are saved in `Highlights/` at the root of Kobo storage.
 
 ## Install
 
-- Install NickelMenu on your Kobo e-reader.
-- Prepare a Telegram Bot Token and the target chat's Chat ID.
-- Back up `.kobo/KoboReader.sqlite`, any existing NickelGram / NickelMenu configuration.
+- Install NickelMenu.
+- Create a Telegram bot and get the target chat's Chat ID.
+- Back up `.kobo/KoboReader.sqlite` and existing NickelGram/NickelMenu settings.
 
-1. Download `NickelGram-0.1.3-kobo-arm.zip` from the [v0.1.3 release](https://github.com/raenut/NickelGram/releases/tag/v0.1.3) and extract it.
-2. Merge the extracted `.adds` folder into the root of Kobo storage, keeping your other existing files.
-3. Copy `.adds/nickelgram/config.example.json` to `config.json` in the same folder.
-4. Edit `config.json` using the configuration table below.
-5. Safely eject and restart your Kobo.
+1. Download `NickelGram-0.1.4-kobo-arm.zip` from the
+   [v0.1.4 release](https://github.com/raenut/NickelGram/releases).
+2. Extract it and merge `.adds/` into the root of Kobo storage.
+3. Copy `config.example.json` to `config.json` in `.adds/nickelgram/`.
+4. Add your Bot Token and Chat ID, then safely eject and restart the Kobo.
+
+The package targets 32-bit ARM Linux Kobo readers.
 
 ## Configuration
 
-Set these parameters in `.adds/nickelgram/config.json`:
+Edit `.adds/nickelgram/config.json`:
 
-| Parameter | Description | Example |
-| --- | --- | --- |
-| `telegram_bot_token` | Telegram Bot Token | `"YOUR_BOT_TOKEN"` |
-| `telegram_chat_id` | Target chat's Chat ID | `"YOUR_CHAT_ID"` |
-| `footer` | Add a footer to Telegram messages | `true` |
-| `footer_text` | Telegram message footer | `"📖 From Kobo"` |
-| `md_footer` | Add a footer to exported Markdown | `true` |
-| `md_footer_text` | Markdown footer text | `"*📖 From Kobo*"` |
-| `md_tags` | Tags for exported files | `["highlights", "literature"]` |
+| Parameter | Purpose |
+| --- | --- |
+| `telegram_bot_token` | Telegram Bot Token |
+| `telegram_chat_id` | Target chat |
+| `footer` | Add a Telegram footer |
+| `footer_text` | Footer text |
+| `footer_url` | Optional footer link; previews stay off |
+| `footer_link_text` | Clickable footer text; required with a URL |
+| `header_format` | Set title/author order and punctuation |
+| `quote_label` | Excerpt label; excerpt uses monospace |
+| `annotation_label` | Annotation label |
+| `md_footer` | Add a Markdown footer |
+| `md_footer_text` | Markdown footer text |
+| `md_tags` | Exported file tags |
 
-Keep `config.json` private because it contains your Bot Token and Chat ID.
+`header_format` supports only `{title}` and `{author}` and must include
+`{title}`. They use Kobo's book title and author; the author may be empty, so
+literal punctuation remains. Templates and labels cannot contain newlines.
+Older configurations keep working with default values. Keep `config.json`
+private; it contains your Token and Chat ID. See
+`.adds/nickelgram/config.example.json` for defaults.
 
-## Limitations
+## Limits
 
-- Direct selections spanning paragraphs can lose paragraph breaks. Save the highlight when paragraph breaks matter; NickelGram then uses Kobo's stored text and converts indentation to single line breaks.
-- Chapter names in Markdown prefer Kobo's anchored table-of-contents title, then the title for the whole book section. If neither is available, the heading is “Untitled Chapter”; XHTML/HTML filenames are not shown. Chapter resolution reads the relevant book section; it does not reconstruct selected text.
-- Tested on Kobo Libra Colour and Kobo Clara 2E; other devices and firmware versions remain unverified.
+- Direct selections may lose paragraph breaks. Save a highlight to use Kobo's
+  stored text when NickelGram finds one unique match in the current book.
+- Markdown chapter names use Kobo's table of contents. Missing titles appear
+  as “Untitled Chapter”.
+- v0.1.4 was installed and launch-checked on Kobo Clara 2E. Telegram delivery
+  and all reading flows have not been fully verified. Other devices and firmware
+  remain unverified.
 
-## Versions
+## Release notes
 
-[v0.1.3](https://github.com/raenut/NickelGram/tree/v0.1.3) · [v0.1.2](https://github.com/raenut/NickelGram/tree/v0.1.2) · [v0.1.1](https://github.com/raenut/NickelGram/tree/v0.1.1) · [v0.1.0](https://github.com/raenut/NickelGram/tree/v0.1.0)
+- [v0.1.4](docs/RELEASE_NOTES_0.1.4.md)
+- [v0.1.3](docs/RELEASE_NOTES_0.1.3.md)
+- [v0.1.2](docs/RELEASE_NOTES_0.1.2.md)
+- [v0.1.1](docs/RELEASE_NOTES_0.1.1.md)
+- [v0.1.0](docs/RELEASE_NOTES_0.1.0.md)
 
-See [v0.1.3 release notes](docs/RELEASE_NOTES_0.1.3.md) for changes and known issues.
-
-See [Testing](docs/TESTING.en.md) for development and testing.
-
-See [Third-Party Licenses](docs/THIRD_PARTY_LICENSES.md) for bundled component details.
+See [local testing](docs/TESTING.en.md) and
+[third-party licenses](docs/THIRD_PARTY_LICENSES.md).
 
 ## License
 
-Licensed under the [MIT License](LICENSE). Copyright © 2026 NickelGram contributors.
-
----
-
-Made with 🤍 by [raenut](https://github.com/raenut) 👩🏻‍💻
+MIT License. Copyright © 2026 NickelGram contributors.

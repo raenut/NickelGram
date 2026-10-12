@@ -59,6 +59,7 @@ func TestReopenedHighlightUsesCompleteBookmarkText(t *testing.T) {
 	db := filepath.Join(t.TempDir(), "KoboReader.sqlite")
 	schema := `CREATE TABLE Bookmark(VolumeID TEXT, Type TEXT, Text TEXT, Annotation TEXT, Hidden BOOL);
 INSERT INTO Bookmark VALUES('book-1','highlight','这是第一句足够长的内容。' || char(10) || char(10) || '这是完整高亮的第二句。','我的批注',0);
+INSERT INTO Bookmark VALUES('book-1','highlight','（季春之月）桐始华，田鼠化为鴽，虹始见，萍始生。……' || char(10) || char(9) || '（季夏之月）温风始至，蟋蟀居壁，鹰乃学习，腐草为萤。……' || char(10) || char(9) || '（季秋之月）鸿雁来宾，爵入大水为蛤，鞠有黄华……','',0);
 INSERT INTO Bookmark VALUES('book-2','highlight','这是第一句足够长的内容。别的书。','',0);`
 	if out, err := exec.Command("/usr/bin/sqlite3", db, schema).CombinedOutput(); err != nil {
 		t.Fatalf("fixture: %v: %s", err, out)
@@ -79,6 +80,11 @@ INSERT INTO Bookmark VALUES('book-2','highlight','这是第一句足够长的内
 	}
 	if got := readMatchingBookmarkText("/usr/bin/sqlite3", "", db, book, "无关选区。"); got != "" {
 		t.Fatalf("unrelated selection matched %q", got)
+	}
+	threeParts := "（季春之月）桐始华，田鼠化为鴽，虹始见，萍始生。……\n\t（季夏之月）温风始至，蟋蟀居壁，鹰乃学习，腐草为萤。……\n\t（季秋之月）鸿雁来宾，爵入大水为蛤，鞠有黄华……"
+	threePartSelection := "（季春之月）桐始华，田鼠化为鴽，虹始见，萍始生。……（季夏之月）温风始至，蟋蟀居壁，鹰乃学习，腐草为萤。……"
+	if normalizeSelectionParagraphs(readMatchingBookmarkText("/usr/bin/sqlite3", "", db, book, threePartSelection)) != normalizeSelectionParagraphs(threeParts) {
+		t.Fatalf("truncated selection did not recover all paragraphs")
 	}
 	if out, err := exec.Command("/usr/bin/sqlite3", db, `INSERT INTO Bookmark VALUES('book-1','highlight','这是第一句足够长的内容。另一种后文。','',0);`).CombinedOutput(); err != nil {
 		t.Fatalf("fixture: %v: %s", err, out)
@@ -120,5 +126,12 @@ func TestIndentationBecomesParagraphBreak(t *testing.T) {
 	input := "English words\n\n\n原有换行"
 	if got := normalizeSelectionParagraphs(input); got != "English words\n原有换行" {
 		t.Errorf("existing spacing changed: %q", got)
+	}
+}
+
+func TestKoboHighlightKeepsAllParagraphs(t *testing.T) {
+	input := "第一段……\n\t第二段……\n\t第三段……"
+	if got := normalizeSelectionParagraphs(input); got != "第一段……\n第二段……\n第三段……" {
+		t.Fatalf("got %q", got)
 	}
 }

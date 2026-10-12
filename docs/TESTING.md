@@ -1,44 +1,40 @@
 # 本地测试
 
-版本改动与已知限制见 [v0.1.3 发布说明](RELEASE_NOTES_0.1.3.md)。
+版本变更与限制见[发布说明](RELEASE_NOTES_0.1.4.md)。本地工具使用
+`KoboReader.sqlite` 的只读副本和电脑上的 `sqlite3`，运行正式 Go 查询与
+格式化代码。Debug 命令不会连接 Telegram。数据库、配置和输出均留在
+Git 忽略的 `local-test/`。
 
-本地入口使用你自己的 `KoboReader.sqlite` 只读快照和电脑上的 `sqlite3`，调用 NickelGram 正式 Go 程序中的查询与格式化代码。`debug` 命令不会建立 Telegram 客户端或调用 Telegram API。真实数据库、配置和生成结果都留在被 Git 忽略的 `local-test/`。
+## 准备
 
-## 第一次运行
-
-电脑需要 `sqlite3` 和 Go 1.23 或更新版本。从 Kobo 备份中取得 `KoboReader.sqlite`，在项目根目录执行：
+电脑需要 `sqlite3` 和 Go 1.23 或更新版本。从 Kobo 备份中取得
+`KoboReader.sqlite`，在项目根目录运行：
 
 ```sh
 KOBO_DB_SOURCE=/path/to/KoboReader.sqlite ./test.sh setup
 ./test.sh list-books
 ```
 
-`setup` 会复制一个本地快照；原始数据库不被修改。数据库有变化时，再运行一次 `setup`。如果 `sqlite3` 或 Go 不在 `PATH`，可分别设置 `SQLITE3=/path/to/sqlite3`、`GO=/path/to/go`。Kobo 安装包继续使用其中的 ARM `sqlite3`；电脑测试使用电脑平台的 `sqlite3`，查询 SQL 保持一致。
-
-```text
-local-test/
-├── KoboReader.sqlite       # 私人的数据库快照，不提交
-├── footer.txt              # 未指定配置时的测试 footer
-├── bin/nickelgram-debug    # 电脑端构建产物
-├── cache/                  # Go 构建缓存
-└── output/                 # 最终消息、Markdown 和排查结果
-```
-
-如需测试自己的配置，可在命令前加 `NICKELGRAM_TEST_CONFIG=/path/to/config.json`。程序会解析配置，但只使用 footer 与标签生成预览；不会发送 Telegram 请求，也不会输出 Token。未指定时使用 `local-test/footer.txt` 的内容。
+`setup` 会复制数据库，不修改原文件。源数据库更新后重新运行。工具不在
+`PATH` 时，可设置 `SQLITE3=/path/to/sqlite3` 或 `GO=/path/to/go`。
+Kobo 安装包使用 ARM 版 `sqlite3`；本地测试使用电脑版本，SQL 查询相同。
 
 ## 常用命令
 
 ```sh
 ./test.sh list-books
 ./test.sh list-highlights
-./test.sh latest-highlight '<list-books 输出的书籍标识>'
-./test.sh render-message '<list-highlights 输出的 BookmarkID>'
-./test.sh export-md '<list-books 输出的书籍标识>'
+./test.sh current-book
+./test.sh latest-highlight '<书籍标识>'
+./test.sh render-message '<BookmarkID>'
+./test.sh export-md '<书籍标识>'
 ```
 
-`latest-highlight` 和 `export-md` 的书籍标识也可填 `current`。`./test.sh current-book` 显示正式代码当前推断的书籍。程序会结合 Kobo 的打开书籍事件、已保存的高亮和最近阅读时间判断当前书。`render-message` 写入 `output/message.txt`；`export-md` 写入带书名与短标识的 `.md`。`export-md` 预览按书中位置排序，包含章节标题和不带时区的 `exported_at`。电脑端预览仍保存在 `local-test/output/`；Kobo 上的正式导出保存到磁盘根目录的 `Highlights/`。
+书籍标识可使用 `current`。`render-message` 写入
+`local-test/output/message.txt`；`export-md` 输出按书中位置排序的 Markdown，
+包含章节标题和 `exported_at`。Kobo 上的正式导出写入根目录 `Highlights/`。
 
-排查跨段换行可运行：
+检查跨段选区可运行：
 
 ```sh
 ./test.sh render-selection current '第一段
@@ -46,10 +42,22 @@ local-test/
 第二段'
 ```
 
-输出中的 `RAW_INPUT_RAW`、`RAW_TEXT_RAW`、`FINAL_MESSAGE_RAW` 用 `\n` 标出换行；编号的 `LINE` 行显示每一行和空行。
+输出中的 `RAW_INPUT_RAW`、`RAW_TEXT_RAW` 和 `FINAL_MESSAGE_RAW` 会将换行显示为
+`\n`。编号的 `LINE` 行会显示文本行和空行。
 
-## 本地环境的边界
+使用自定义配置预览时，设置 `NICKELGRAM_TEST_CONFIG=/path/to/config.json`。
+工具会读取配置并预览消息，但不会输出 Token 或发送 Telegram 请求。
 
-本地可检查这份快照的 SQLite schema、书名、作者、Text、Annotation、时间、footer、普通消息、Markdown 和文件名。快照中的内容与设备实时状态可能不同；是否有多段高亮取决于你提供的数据库样本。
+## 本地测试范围
 
-本地不能确认 NickelMenu `{1}` 实际传入的文本、selection UI 的行为、打开书籍事件及 Bookmark 何时写入、Reader 菜单触发状态、Kobo ARM 环境和 Telegram 实际发送。这些需要最后的实机验证。如果选区输入本身没有段落分隔，程序无法从纯文本推断原书的段落位置。未写入 Kobo 数据库的批注也无法通过只读查询发送。
+本地测试可检查数据库结构、书名、作者、高亮、批注、时间、消息格式、
+Markdown 和文件名。数据库副本可能与设备现状不同；跨段效果也取决于
+书籍和样本。
+
+发布前检查书名/作者格式、缺失作者、书摘等宽样式、自定义标签，以及
+有链接和无链接的页脚。还需在 Kobo 上检查普通选区、已保存高亮、
+最近高亮和整书导出。
+
+本地测试不能确认 NickelMenu 传入的 `{1}` 文本、阅读界面行为、Kobo ARM 运行或
+Telegram 实际发送。没有段落标记时，程序无法推断原书的分段；数据库中
+没有的批注也无法读取。

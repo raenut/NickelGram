@@ -1,4 +1,5 @@
 # Local configuration and credentials
+AGENTS.md
 **/config.json
 .env
 .env.*

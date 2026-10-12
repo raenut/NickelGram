@@ -250,13 +250,9 @@ func bookmarkMatchKey(s string) string {
 	}, s)
 }
 
-func sentenceBoundaryPrefix(full, selected string) bool {
-	if utf8.RuneCountInString(selected) < 8 || !strings.HasPrefix(full, selected) || len(full) == len(selected) {
-		return false
-	}
-	last, _ := utf8.DecodeLastRuneInString(selected)
-	next, _ := utf8.DecodeRuneInString(full[len(selected):])
-	return strings.ContainsRune("。.!?！？", last) || strings.ContainsRune("。.!?！？", next)
+func selectionIsPrefix(full, selected string) bool {
+	return utf8.RuneCountInString(selected) >= 5 &&
+		len(full) > len(selected) && strings.HasPrefix(full, selected)
 }
 
 func readMatchingBookmark(binary, lib, db string, book RecentBook, selection string) Highlight {
@@ -282,7 +278,7 @@ func readMatchingBookmark(binary, lib, db string, book RecentBook, selection str
 			return Highlight{}
 		}
 		fullKey := bookmarkMatchKey(full)
-		if fullKey == key || sentenceBoundaryPrefix(fullKey, key) {
+		if fullKey == key || selectionIsPrefix(fullKey, key) {
 			annotation, err := decodeHexField(row.Annotation)
 			if err != nil {
 				return Highlight{}

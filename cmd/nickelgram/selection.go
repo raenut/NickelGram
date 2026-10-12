@@ -12,6 +12,9 @@ var newlineRun = regexp.MustCompile(`\n+`)
 
 func normalizeSelectionParagraphs(text string) string {
 	text = strings.NewReplacer("\r\n", "\n", "\r", "\n", "\u2028", "\n", "\u2029", "\n").Replace(text)
+	// Kobo stores paragraph starts in highlights as LF followed by a tab.
+	// Keep the LF and remove the indentation marker as one line break.
+	text = strings.ReplaceAll(text, "\n\t", "\n")
 	text = indentationSpaces.ReplaceAllStringFunc(text, func(spaces string) string {
 		if spaces == " " {
 			return spaces

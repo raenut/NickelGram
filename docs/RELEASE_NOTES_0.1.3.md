@@ -1,15 +1,17 @@
 # NickelGram 0.1.3
 
-## 新增与改进
+## 改进
 
-- 保存高亮分享时，尽量保留 Kobo 记录的段落分隔；段首缩进会转换为换行。
-- 整书 Markdown 导出优先使用 Kobo 目录标题；缺少标题时显示 “Untitled Chapter”，不再用内部文件名代替。
+- 保存高亮后分享，可保留 Kobo 记录的段落换行。
+- Markdown 章节标题优先使用 Kobo 目录标题；缺失时显示
+  “Untitled Chapter”。
 
-## 已知问题
+## 已知限制
 
-- 直接分享选区时，Kobo/NickelMenu 可能不提供段落分隔。需要保留分段时，请先保存高亮；只有当前书中存在唯一匹配时，才会采用 Kobo 保存的全文和批注。
-- Kobo Clara 2E 上拖动选区有时会卡顿，原因及其与书籍格式的关系尚未确认。
-- 不同书籍格式和段落标记尚未覆盖验证；其他设备与固件也未验证。
+- 直接选区可能不含段落分隔。保存高亮后，只有当前书中唯一匹配时，
+  才会使用 Kobo 保存的全文和批注。
+- Clara 2E 拖动选区偶有卡顿，原因尚未确认。
+- 其他书籍格式、设备和固件未全面验证。
 
 ---
 
@@ -17,11 +19,13 @@
 
 ## Improvements
 
-- Sharing a saved highlight now preserves Kobo's paragraph breaks when available, converting paragraph indentation to line breaks.
-- Whole-book Markdown exports prefer Kobo table-of-contents titles. Missing titles use “Untitled Chapter” instead of internal filenames.
+- Saved highlights preserve Kobo's paragraph breaks when available.
+- Markdown chapter headings use Kobo's table of contents, with
+  “Untitled Chapter” as a fallback.
 
-## Known issues
+## Known limits
 
-- Direct selections may not include paragraph boundaries. Save the highlight when paragraph breaks matter; NickelGram uses the saved text and annotation only when it uniquely matches within the current book.
-- Selection dragging can lag on Kobo Clara 2E. The cause and any relationship to book format remain unconfirmed.
-- Book-format coverage is incomplete. Other devices and firmware versions have not been verified.
+- Direct selections may omit paragraph breaks. A saved highlight is used only
+  when it uniquely matches within the current book.
+- Selection dragging can lag on Clara 2E; the cause is unknown.
+- Other book formats, devices, and firmware are not fully verified.

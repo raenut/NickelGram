@@ -24,6 +24,7 @@ func runDebug(args []string) error {
 	footer := os.Getenv("NICKELGRAM_TEST_FOOTER")
 	mdFooter := footer
 	var mdTags []string
+	var messageOptions Config
 	if configPath := os.Getenv("NICKELGRAM_TEST_CONFIG"); configPath != "" {
 		c, err := readConfigFile(configPath)
 		if err != nil {
@@ -31,6 +32,7 @@ func runDebug(args []string) error {
 		}
 		footer = c.Footer
 		mdFooter, mdTags = c.MDFooter, c.MDTags
+		messageOptions = c
 	}
 	query := func(sql string, dest any) error {
 		data, err := sqliteQuery(binary, "", db, sql)
@@ -150,7 +152,7 @@ func runDebug(args []string) error {
 		if err != nil {
 			return err
 		}
-		message := highlightMessage(book, mark, footer)
+		message := configuredHighlightMessage(book, mark, footer, messageOptions)
 		path := filepath.Join(outDir, "message.txt")
 		if err := os.WriteFile(path, []byte(message), 0600); err != nil {
 			return err
@@ -173,10 +175,10 @@ func runDebug(args []string) error {
 			return err
 		}
 		printTextDebug("RAW_INPUT", selection)
-		message := selectionMessage(book, selection, footer)
+		message := configuredSelectionMessage(book, selection, footer, messageOptions)
 		if mark := readMatchingBookmark(binary, "", db, book, selection); mark.Text != "" {
-		selection = mark.Text
-			message = highlightMessage(book, mark, footer)
+			selection = mark.Text
+			message = configuredHighlightMessage(book, mark, footer, messageOptions)
 		}
 		path := filepath.Join(outDir, "selection-message.txt")
 		if err := os.WriteFile(path, []byte(message), 0600); err != nil {

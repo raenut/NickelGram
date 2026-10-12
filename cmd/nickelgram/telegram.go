@@ -11,23 +11,39 @@ import (
 	"mime/multipart"
 	"net"
 	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
 	"time"
+	"unicode"
+	"unicode/utf16"
 )
 
 type Config struct {
-	BotToken string   `json:"telegram_bot_token"`
-	ChatID   string   `json:"telegram_chat_id"`
-	Footer   string   `json:"footer"`
-	MDFooter string   `json:"md_footer"`
-	MDTags   []string `json:"md_tags"`
+	BotToken        string   `json:"telegram_bot_token"`
+	ChatID          string   `json:"telegram_chat_id"`
+	Footer          string   `json:"footer"`
+	FooterURL       string   `json:"footer_url"`
+	FooterLinkText  string   `json:"footer_link_text"`
+	HeaderFormat    string   `json:"header_format"`
+	QuoteLabel      string   `json:"quote_label"`
+	AnnotationLabel string   `json:"annotation_label"`
+	MDFooter        string   `json:"md_footer"`
+	MDTags          []string `json:"md_tags"`
 }
 
 var tokenPattern = regexp.MustCompile(`^[0-9]+:[A-Za-z0-9_-]+$`)
 var chatPattern = regexp.MustCompile(`^(-?[0-9]+|@[A-Za-z0-9_]+)$`)
+
+func validHeaderFormat(format string) bool {
+	if !strings.Contains(format, "{title}") {
+		return false
+	}
+	remaining := strings.NewReplacer("{title}", "", "{author}", "").Replace(format)
+	return !strings.ContainsAny(remaining, "{}")
+}
 
 func readConfig(root string) (Config, error) {
 	return readConfigFile(filepath.Join(root, "config.json"))
@@ -35,15 +51,20 @@ func readConfig(root string) (Config, error) {
 
 func readConfigFile(path string) (Config, error) {
 	var raw struct {
-		Token        string          `json:"telegram_bot_token"`
-		Chat         string          `json:"telegram_chat_id"`
-		LegacyToken  string          `json:"bot_token"`
-		LegacyChat   string          `json:"chat_id"`
-		Footer       json.RawMessage `json:"footer"`
-		FooterText   string          `json:"footer_text"`
-		MDFooter     *bool           `json:"md_footer"`
-		MDFooterText string          `json:"md_footer_text"`
-		MDTags       []string        `json:"md_tags"`
+		Token           string          `json:"telegram_bot_token"`
+		Chat            string          `json:"telegram_chat_id"`
+		LegacyToken     string          `json:"bot_token"`
+		LegacyChat      string          `json:"chat_id"`
+		Footer          json.RawMessage `json:"footer"`
+		FooterText      string          `json:"footer_text"`
+		FooterURL       string          `json:"footer_url"`
+		FooterLinkText  string          `json:"footer_link_text"`
+		HeaderFormat    string          `json:"header_format"`
+		QuoteLabel      string          `json:"quote_label"`
+		AnnotationLabel string          `json:"annotation_label"`
+		MDFooter        *bool           `json:"md_footer"`
+		MDFooterText    string          `json:"md_footer_text"`
+		MDTags          []string        `json:"md_tags"`
 	}
 	b, err := os.ReadFile(path)
 	if err != nil {
@@ -61,9 +82,19 @@ func readConfigFile(path string) (Config, error) {
 	} else {
 		raw.Token, raw.Chat = raw.LegacyToken, raw.LegacyChat
 	}
-	c := Config{BotToken: raw.Token, ChatID: raw.Chat}
+	c := Config{
+		BotToken: raw.Token, ChatID: raw.Chat,
+		HeaderFormat: raw.HeaderFormat, QuoteLabel: raw.QuoteLabel,
+		AnnotationLabel: raw.AnnotationLabel,
+	}
 	if !tokenPattern.MatchString(c.BotToken) || !chatPattern.MatchString(c.ChatID) {
 		return Config{}, errors.New("配置格式有误；请检查 Bot Token 和 Chat ID。")
+	}
+	if c.HeaderFormat != "" && !validHeaderFormat(c.HeaderFormat) {
+		return Config{}, errors.New("header_format 只能使用 {title}、{author} 和普通文字，且必须包含 {title}。")
+	}
+	if strings.ContainsAny(c.HeaderFormat, "\r\n") || strings.ContainsAny(c.QuoteLabel, "\r\n") || strings.ContainsAny(c.AnnotationLabel, "\r\n") {
+		return Config{}, errors.New("header_format、quote_label 和 annotation_label 不能包含换行。")
 	}
 	if len(raw.Footer) != 0 {
 		var enabled bool
@@ -74,6 +105,17 @@ func readConfigFile(path string) (Config, error) {
 		} else if json.Unmarshal(raw.Footer, &c.Footer) != nil {
 			return Config{}, errors.New("footer 必须是 true、false 或旧版字符串。")
 		}
+	}
+	if raw.FooterURL != "" {
+		u, err := url.Parse(raw.FooterURL)
+		if err != nil || (u.Scheme != "https" && u.Scheme != "http") || u.Host == "" {
+			return Config{}, errors.New("footer_url 必须是完整的 http 或 https 网址。")
+		}
+		c.FooterURL = raw.FooterURL
+		if raw.FooterLinkText == "" || !strings.Contains(c.Footer, raw.FooterLinkText) {
+			return Config{}, errors.New("footer_link_text 必须是 footer_text 中的一段文字。")
+		}
+		c.FooterLinkText = raw.FooterLinkText
 	}
 	if raw.MDFooter != nil && *raw.MDFooter {
 		c.MDFooter = raw.MDFooterText
@@ -100,10 +142,14 @@ func newTelegram(root string) (*Telegram, error) {
 	return &Telegram{Client: &http.Client{Timeout: 5 * time.Second, CheckRedirect: func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }, Transport: &http.Transport{Proxy: nil, DialContext: (&net.Dialer{Timeout: 3 * time.Second}).DialContext, TLSClientConfig: &tls.Config{RootCAs: pool, MinVersion: tls.VersionTLS12}, TLSHandshakeTimeout: 3 * time.Second, ResponseHeaderTimeout: 4 * time.Second, DisableKeepAlives: true}}, BaseURL: "https://api.telegram.org"}, nil
 }
 func (t *Telegram) SendMessage(c Config, document string) Outcome {
+	c = messageConfig(c)
 	payload := map[string]any{
 		"chat_id":              c.ChatID,
 		"text":                 document,
 		"link_preview_options": map[string]bool{"is_disabled": true},
+	}
+	if entities := telegramMessageEntities(c, document); len(entities) > 0 {
+		payload["entities"] = entities
 	}
 	body, err := json.Marshal(payload)
 	if err != nil {
@@ -138,6 +184,45 @@ func (t *Telegram) SendMessage(c Config, document string) Outcome {
 		}
 	}
 	return Outcome{Message: fmt.Sprintf("Telegram 未确认发送成功（HTTP %d）。", resp.StatusCode)}
+}
+
+func telegramMessageEntities(c Config, document string) []map[string]any {
+	c = messageConfig(c)
+	var entities []map[string]any
+	headingEnd := strings.Index(document, "\n\n")
+	if headingEnd >= 0 {
+		quoteStart := headingEnd + 2 + len(c.QuoteLabel) + 1
+		marker := c.QuoteLabel + "\n"
+		if strings.HasPrefix(document[headingEnd+2:], marker) {
+			quoteEnd := len(document)
+			if nextBlock := strings.Index(document[quoteStart:], "\n\n"); nextBlock >= 0 {
+				quoteEnd = quoteStart + nextBlock
+			}
+			quote := strings.TrimRightFunc(document[quoteStart:quoteEnd], unicode.IsSpace)
+			if quote != "" {
+				entities = append(entities, map[string]any{
+					"type": "code", "offset": utf16Length(document[:quoteStart]),
+					"length": utf16Length(quote),
+				})
+			}
+		}
+	}
+	if c.FooterURL != "" && c.FooterLinkText != "" && c.Footer != "" && strings.HasSuffix(document, c.Footer) {
+		footerStart := len(document) - len(c.Footer)
+		linkIndex := strings.Index(c.Footer, c.FooterLinkText)
+		if linkIndex >= 0 {
+			linkStart := footerStart + linkIndex
+			entities = append(entities, map[string]any{
+				"type": "text_link", "offset": utf16Length(document[:linkStart]),
+				"length": utf16Length(c.FooterLinkText), "url": c.FooterURL,
+			})
+		}
+	}
+	return entities
+}
+
+func utf16Length(text string) int {
+	return len(utf16.Encode([]rune(text)))
 }
 
 func (t *Telegram) SendDocument(c Config, path, name string) Outcome {
@@ -217,9 +302,9 @@ func runAction(root, selection string) error {
 	if err != nil {
 		return err
 	}
-	message := selectionMessage(book, selection, c.Footer)
+	message := configuredSelectionMessage(book, selection, c.Footer, c)
 	if mark := readMatchingBookmark(binary, lib, koboDB, book, selection); mark.Text != "" {
-		message = highlightMessage(book, mark, c.Footer)
+		message = configuredHighlightMessage(book, mark, c.Footer, c)
 	}
 	outcome := tg.SendMessage(c, message)
 	if !outcome.OK {
@@ -255,7 +340,7 @@ func runLatestHighlight(root string) error {
 	if err != nil {
 		return err
 	}
-	outcome := tg.SendMessage(c, highlightMessage(book, mark, c.Footer))
+	outcome := tg.SendMessage(c, configuredHighlightMessage(book, mark, c.Footer, c))
 	if !outcome.OK {
 		return errors.New(outcome.Message)
 	}

@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-import hashlib, json, os, re, shutil, struct, subprocess, zipfile
+import hashlib, json, os, re, shutil, struct, subprocess, tempfile, zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = '0.1.3'
+VERSION = '0.1.4'
 GO_VERSION = 'go1.26.8'
 TOKEN_PATTERN = re.compile(rb'(?<![A-Za-z0-9])\d{6,}:[A-Za-z0-9_-]{20,}(?![A-Za-z0-9])')
 PRIVATE_ID_PATTERN = re.compile(rb'"(?:telegram_)?(?:chat_id|channel_id|username)"\s*:\s*"(?:-?[0-9]{4,}|@[A-Za-z0-9_]+)"')
-STAMP = (2026, 10, 6, 0, 0, 0)
+STAMP = (2026, 10, 12, 0, 0, 0)
 go = os.environ.get('GO', 'go')
 env = dict(os.environ, CGO_ENABLED='0', GOOS='linux', GOARCH='arm', GOARM='5', GOTOOLCHAIN='local')
 actual = subprocess.check_output([go, 'version'], text=True).split()[2]
@@ -16,8 +16,9 @@ if actual != GO_VERSION:
 
 dist = ROOT / 'dist'
 dist.mkdir(exist_ok=True)
-stage = ROOT / 'build/release'
-if stage.exists(): shutil.rmtree(stage)
+build = ROOT / 'build'
+build.mkdir(exist_ok=True)
+stage = Path(tempfile.mkdtemp(prefix='nickelgram-release-', dir=build))
 app = stage / '.adds/nickelgram'
 (app / 'lib').mkdir(parents=True)
 (stage / '.adds/nm').mkdir(parents=True)
@@ -42,7 +43,7 @@ for source,target in [('README.md','README.md'),('README.zh-CN.md','README.zh-CN
     (app/target).parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(ROOT/source, app/target)
 
-manifest={'version':VERSION,'go':actual,'target':'linux/arm GOARM=5 CGO_ENABLED=0','hardware_tested':True,
+manifest={'version':VERSION,'go':actual,'target':'linux/arm GOARM=5 CGO_ENABLED=0','hardware_tested':False,
           'files':{p.relative_to(stage).as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(stage.rglob('*')) if p.is_file()}}
 (app/'MANIFEST.json').write_text(json.dumps(manifest,indent=2,ensure_ascii=False)+'\n')
 
@@ -61,7 +62,17 @@ def archive(path, files):
             assert not TOKEN_PATTERN.search(data), f'Bot token pattern found in {n}'
             assert not PRIVATE_ID_PATTERN.search(data), f'Private Telegram ID found in {n}'
 
-package=dist/f'NickelGram-{VERSION}-kobo-arm.zip'
+def unique_output_path(directory, filename):
+    candidate = directory / filename
+    if not candidate.exists(): return candidate
+    stem, suffix = candidate.stem, candidate.suffix
+    index = 1
+    while True:
+        candidate = directory / f'{stem}-{index}{suffix}'
+        if not candidate.exists(): return candidate
+        index += 1
+
+package=unique_output_path(dist, f'NickelGram-{VERSION}-kobo-arm.zip')
 archive(package,[(p,p.relative_to(stage).as_posix(),p.name in ('nickelgram.sh','nickelgram','sqlite3')) for p in stage.rglob('*') if p.is_file()])
 
 source_files=[ROOT/n for n in ('.gitignore','go.mod','LICENSE','README.md','README.zh-CN.md','assets/nickelgram-icon.svg','test.sh')]
@@ -73,8 +84,11 @@ for p in source_files:
     if p.name=='config.json': raise SystemExit('Refusing to package config.json')
     if TOKEN_PATTERN.search(data) or PRIVATE_ID_PATTERN.search(data): raise SystemExit(f'Possible Telegram credential in {p}')
 
-source_zip=dist/f'NickelGram-{VERSION}-source.zip'
+source_zip=unique_output_path(dist, f'NickelGram-{VERSION}-source.zip')
 archive(source_zip,[(p,f'NickelGram-{VERSION}/'+p.relative_to(ROOT).as_posix(),p.suffix=='.sh') for p in source_files])
-(dist/'SHA256SUMS').write_text(''.join(hashlib.sha256(p.read_bytes()).hexdigest()+'  '+p.name+'\n' for p in (package,source_zip)))
+checksums=unique_output_path(dist, 'SHA256SUMS')
+checksums.write_text(''.join(hashlib.sha256(p.read_bytes()).hexdigest()+'  '+p.name+'\n' for p in (package,source_zip)))
+shutil.rmtree(stage)
 print(package)
 print(source_zip)
+print(checksums)
