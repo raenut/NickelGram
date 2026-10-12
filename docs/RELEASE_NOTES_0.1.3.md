@@ -10,7 +10,6 @@
 
 - 直接选区可能不含段落分隔。保存高亮后，只有当前书中唯一匹配时，
   才会使用 Kobo 保存的全文和批注。
-- Clara 2E 拖动选区偶有卡顿，原因尚未确认。
 - 其他书籍格式、设备和固件未全面验证。
 
 ---
@@ -27,5 +26,4 @@
 
 - Direct selections may omit paragraph breaks. A saved highlight is used only
   when it uniquely matches within the current book.
-- Selection dragging can lag on Clara 2E; the cause is unknown.
 - Other book formats, devices, and firmware are not fully verified.

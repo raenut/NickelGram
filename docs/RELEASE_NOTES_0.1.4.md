@@ -19,7 +19,6 @@
 - 已安装到 Kobo Clara 2E，并通过程序启动检查。
 - Telegram 实际发送和完整阅读流程尚未全部验证。
 - 直接选区缺少段落标记时，无法还原原书分段。
-- Clara 2E 拖动选区偶有卡顿，原因尚未确认。
 
 ---
 
@@ -47,4 +46,3 @@
 - Installed and launch-checked on Kobo Clara 2E.
 - Telegram delivery and all reading flows have not been fully verified.
 - Direct selections without paragraph markers cannot restore book paragraphs.
-- Selection dragging can lag on Clara 2E; the cause is unknown.
