@@ -73,17 +73,22 @@ private; it contains your Token and Chat ID. See
   and all reading flows have not been fully verified. Other devices and firmware
   remain unverified.
 
-## Release notes
+## Versions
 
-- [v0.1.4](docs/RELEASE_NOTES_0.1.4.md)
-- [v0.1.3](docs/RELEASE_NOTES_0.1.3.md)
-- [v0.1.2](docs/RELEASE_NOTES_0.1.2.md)
-- [v0.1.1](docs/RELEASE_NOTES_0.1.1.md)
-- [v0.1.0](docs/RELEASE_NOTES_0.1.0.md)
+[v0.1.4](https://github.com/raenut/NickelGram/tree/v0.1.4) ·
+[v0.1.3](https://github.com/raenut/NickelGram/tree/v0.1.3) ·
+[v0.1.2](https://github.com/raenut/NickelGram/tree/v0.1.2) ·
+[v0.1.1](https://github.com/raenut/NickelGram/tree/v0.1.1) ·
+[v0.1.0](https://github.com/raenut/NickelGram/tree/v0.1.0)
 
-See [local testing](docs/TESTING.en.md) and
-[third-party licenses](docs/THIRD_PARTY_LICENSES.md).
+See [Testing](docs/TESTING.en.md) for development and testing.
+
+See [Third-Party Licenses](docs/THIRD_PARTY_LICENSES.md) for bundled component details.
 
 ## License
 
-MIT License. Copyright © 2026 NickelGram contributors.
+Licensed under the [MIT License](LICENSE). Copyright © 2026 NickelGram contributors.
+
+---
+
+Made with 🤍 by [raenut](https://github.com/raenut) 👩🏻‍💻

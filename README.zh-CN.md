@@ -70,16 +70,22 @@ Markdown 文件保存在 Kobo 存储根目录的 `Highlights/` 文件夹。
 - v0.1.4 已安装到 Kobo Clara 2E 并通过启动检查；Telegram 发送和完整
   阅读流程尚未全部验证。其他设备和固件也未验证。
 
-## 发布说明
+## 版本
 
-- [v0.1.4](docs/RELEASE_NOTES_0.1.4.md)
-- [v0.1.3](docs/RELEASE_NOTES_0.1.3.md)
-- [v0.1.2](docs/RELEASE_NOTES_0.1.2.md)
-- [v0.1.1](docs/RELEASE_NOTES_0.1.1.md)
-- [v0.1.0](docs/RELEASE_NOTES_0.1.0.md)
+[v0.1.4](https://github.com/raenut/NickelGram/tree/v0.1.4) ·
+[v0.1.3](https://github.com/raenut/NickelGram/tree/v0.1.3) ·
+[v0.1.2](https://github.com/raenut/NickelGram/tree/v0.1.2) ·
+[v0.1.1](https://github.com/raenut/NickelGram/tree/v0.1.1) ·
+[v0.1.0](https://github.com/raenut/NickelGram/tree/v0.1.0)
 
-另见[本地测试说明](docs/TESTING.md)和[第三方许可证](docs/THIRD_PARTY_LICENSES.md)。
+开发与本地测试说明见[测试说明](docs/TESTING.md)。
+
+第三方组件信息见[第三方许可证](docs/THIRD_PARTY_LICENSES.md)。
 
 ## 许可证
 
-MIT 许可证。版权所有 © 2026 NickelGram contributors。
+本项目采用 [MIT 许可证](LICENSE)。版权所有 © 2026 NickelGram contributors。
+
+---
+
+Made with 🤍 by [raenut](https://github.com/raenut) 👩🏻‍💻
