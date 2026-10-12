@@ -64,6 +64,8 @@ NickelGram 通过 [NickelMenu](https://github.com/pgaskin/NickelMenu) 为 Kobo �
 
 [v0.1.3](https://github.com/raenut/NickelGram/tree/v0.1.3) · [v0.1.2](https://github.com/raenut/NickelGram/tree/v0.1.2) · [v0.1.1](https://github.com/raenut/NickelGram/tree/v0.1.1) · [v0.1.0](https://github.com/raenut/NickelGram/tree/v0.1.0)
 
+v0.1.3 的改动与已知问题见[发布说明](docs/RELEASE_NOTES_0.1.3.md)。
+
 开发与本地测试说明见[测试说明](docs/TESTING.md)。
 
 第三方组件信息见[第三方许可证](docs/THIRD_PARTY_LICENSES.md)。

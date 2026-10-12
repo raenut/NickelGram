@@ -1,5 +1,7 @@
 # 本地测试
 
+版本改动与已知限制见 [v0.1.3 发布说明](RELEASE_NOTES_0.1.3.md)。
+
 本地入口使用你自己的 `KoboReader.sqlite` 只读快照和电脑上的 `sqlite3`，调用 NickelGram 正式 Go 程序中的查询与格式化代码。`debug` 命令不会建立 Telegram 客户端或调用 Telegram API。真实数据库、配置和生成结果都留在被 Git 忽略的 `local-test/`。
 
 ## 第一次运行

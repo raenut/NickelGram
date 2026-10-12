@@ -64,7 +64,9 @@ Keep `config.json` private because it contains your Bot Token and Chat ID.
 
 [v0.1.3](https://github.com/raenut/NickelGram/tree/v0.1.3) · [v0.1.2](https://github.com/raenut/NickelGram/tree/v0.1.2) · [v0.1.1](https://github.com/raenut/NickelGram/tree/v0.1.1) · [v0.1.0](https://github.com/raenut/NickelGram/tree/v0.1.0)
 
-See [Testing](docs/TESTING.md) for development and testing.
+See [v0.1.3 release notes](docs/RELEASE_NOTES_0.1.3.md) for changes and known issues.
+
+See [Testing](docs/TESTING.en.md) for development and testing.
 
 See [Third-Party Licenses](docs/THIRD_PARTY_LICENSES.md) for bundled component details.
 
